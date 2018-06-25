@@ -1,2 +1,2 @@
 # estoppel
-Embedded Systems Prototype Library
+Embedded Systems Prototyping Library
