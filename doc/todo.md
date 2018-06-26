@@ -26,7 +26,6 @@ Estoppel TODO list and idea board
 - Expects() and Ensures() from GSL for pre- and post-conditions
 - gsl::zstring for null terminated strings (or gsl::czstring)
 - Create special type a la owner<T> or unique_ptr<T> to denote global objects
-- 
 - Return tuple or struct instead of in-out parametrs
 - Prefer in-class initializers
 - Default arguments instead of overloaded methods
@@ -233,7 +232,13 @@ Used for CHECK() macro
 ### Mockator Test Double framework
 [http://www.mockator.com/]
 Also has Eclipse plugin for automatically creating test doubles
+Works well with Cevelop
 
+### Open source libraries
+Facebook Folly [https://github.com/facebook/folly/blob/master/folly/docs/Overview.md]
+- Packed pointers
+
+Google Abseil [https://abseil.io/about/intro]
 
 ## References
 CppCon 2017 Presentations
