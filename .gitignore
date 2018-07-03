@@ -36,3 +36,7 @@
 .cproject
 .settings
 
+# CMake build directory
+build
+
+

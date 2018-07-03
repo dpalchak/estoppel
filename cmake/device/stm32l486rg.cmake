@@ -1,0 +1,12 @@
+
+set(CMAKE_SYSTEM_PROCESSOR STM32L486RG)
+
+include("${ESTOPPEL_ROOT}/cmake/device/stm32l4.cmake")
+
+set(DEVICE_VARIANT "STM32L486RG")
+
+add_definitions(
+	"-DSTM32L486xx=1 "
+	"-DSTM32L486RG=1 "
+	"-DDEVICE_VARIANT=${DEVICE_VARIANT} ")
+
