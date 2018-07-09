@@ -15,7 +15,7 @@ function(estp_dirname filename output_var_name)
 endfunction()
 
 # More convenient function for parsing arguments
-function (estp_parse_args input_text)
+function(estp_parse_args input_text)
 	# First we need to parse our optional arguments into three lists, only one of which we care about
 	set(options )
     set(oneValueArgs )

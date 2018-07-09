@@ -3,16 +3,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
 # The Generic system name is used for embedded targets (targets without OS) in Cmake
-set(CMAKE_SYSTEM_NAME          Generic)
-
-# Enforce minimum language standards
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_EXECUTABLE_SUFFIX_C ".elf")
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXECUTABLE_SUFFIX_CPP ".elf")
+set(CMAKE_SYSTEM_NAME "Generic")
 
 # Set a toolchain path. You only need to set this if the toolchain isn't in
 # your system path
@@ -27,12 +18,12 @@ set(CMAKE_C_COMPILER "${TOOLCHAIN_PATH}/arm-none-eabi-gcc")
 set(CMAKE_CXX_COMPILER "${TOOLCHAIN_PATH}/arm-none-eabi-g++")
 set(CMAKE_ASM_COMPILER "${TOOLCHAIN_PATH}/arm-none-eabi-as")
 
-# Just use GCC for assembly, it does the Right Thing
+# JUse GCC for assembly, it does the RightThing
 set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_C_COMPILER> <FLAGS> <DEFINES> -o <OBJECT> -c <SOURCE>")
 
 # Set other build commands
-# AR and RANLIB have to be cached because CMake is broken and doesn't cross-compile 
-# correctly otherwise
+# AR and RANLIB have to be cached because CMake is broken and won't
+# cross-compile correctly otherwise
 set(CMAKE_AR "${TOOLCHAIN_PATH}/arm-none-eabi-ar" CACHE FILEPATH "")
 set(CMAKE_RANLIB "${TOOLCHAIN_PATH}/arm-none-eabi-ranlib" CACHE FILEPATH "")
 set(CMAKE_OBJCOPY "${TOOLCHAIN_PATH}/arm-none-eabi-objcopy")
