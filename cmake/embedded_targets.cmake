@@ -1,8 +1,9 @@
-function(add_firmware_config EXE_TARGET)
+function(add_embedded_executable EXE_TARGET)
+
+    add_executable(${EXE_TARGET} ${ARGN})
 
     # Configure path to and name of generated artifacts
-    set_target_properties(${EXE_TARGET} PROPERTIES 
-    	RUNTIME_OUTPUT_DIRECTORY "${ESTOPPEL_ARTIFACT_ROOT}"
+    set_target_properties(${EXE_TARGET} PROPERTIES
     	DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     	RELEASE_POSTFIX "${CMAKE_RELEASE_POSTFIX}"
     	MINSIZEREL_POSTFIX "${CMAKE_MINSIZEREL_POSTFIX}"
@@ -39,7 +40,7 @@ function(add_firmware_config EXE_TARGET)
         "${BIN_FILE_NAME}"
         "${HEX_FILE_NAME}"
     )
-    
+
     # Set dependent filenames as properties for other operations to use
     set_target_properties(${EXE_TARGET} PROPERTIES
     	TARGET_BIN_FILE "${BIN_FILE_NAME}"
@@ -49,7 +50,7 @@ function(add_firmware_config EXE_TARGET)
 
 endfunction()
 
-function(add_firmware_pylink_flash EXE_TARGET)
+function(enable_pylink_for_target EXE_TARGET)
     estp_parse_args("${ARGN}"
         VALUE_ARGS
             INTERFACE DEVICE FLASH_ADDR
@@ -62,7 +63,7 @@ function(add_firmware_pylink_flash EXE_TARGET)
     endif()
 
     if(NOT EXISTS "${PYLINK}")
-        message(WARNING 
+        message(WARNING
         	"PYLINK not found at specified location: ${PYLINK}\n"
         	"Omitting pylink targets..."
     	)

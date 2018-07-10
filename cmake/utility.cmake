@@ -2,18 +2,6 @@ cmake_minimum_required(VERSION 3.9)
 
 include (CMakeParseArguments)
 
-# Determine the absolute path of a file
-function(estp_realpath filename output_var_name)
-	get_filename_component(filename_abs ${filename} ABSOLUTE)
-	set(${output_var_name} ${filename_abs} PARENT_SCOPE)
-endfunction()
-
-# Determine just the path portion of a file
-function(estp_dirname filename output_var_name)
-	get_filename_component(dirname ${filename} DIRECTORY)
-	set(${output_var_name} ${dirname} PARENT_SCOPE)
-endfunction()
-
 # More convenient function for parsing arguments
 function(estp_parse_args input_text)
 	# First we need to parse our optional arguments into three lists, only one of which we care about
