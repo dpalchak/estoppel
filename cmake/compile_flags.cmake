@@ -9,19 +9,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if($<BUILD_ENV:firmware>)
 	if(NOT CMAKE_C_COMPILER_ID MATCHES "GNU")
-		message(FATAL_ERROR 
+		message(FATAL_ERROR
 			"Non-GNU compilers not supported for firmware builds: "
 			${CMAKE_C_COMPILER_ID}
 		)
 	endif()
-				
+
 	set(ESTP_C_CXX_FLAGS
         " -Wall"                    # common warnings
         " -Wextra"                  # extra warnings
         " -Werror"                  # warnings are errors
+        " -Wundef"                  # no evaluation of undefined identifiers in #if
         " -Wswitch-enum"            # each enum value must appear in switch
         " -Wswitch-default"         # switch must have default
         " -Wsign-conversion"        # no implicit signedness conversions
+        " -Wdouble-promotion"       # no automatic promotion to double
         " -Wconversion"             # check if conversion might affect value
         " -Winit-self"              # no self-initialization
         " -Wlogical-op"             # check bitwise vs logical operations
@@ -33,32 +35,42 @@ if($<BUILD_ENV:firmware>)
 		" -ffunction-sections"      # one section per function
 		" -fdata-sections"          # one section per static variable
 		" -ffreestanding"           # do not assume existence of standard facilities
-		" -g"                       # all builds include debug info
+		" -fno-common"              # no common section
+		" -fdebug-types-section"    # optimize debug sections
+		" -fno-exceptions"          # disable exceptions
+		" -fno-unwind-tables"       # omit unwind tables
+		" -fshort-enums"            # allow enum types to be smallest possible type
+		" -g3"                      # all builds include debug info
 	)
 
 	set(ESTP_CXXFLAGS
+	    " -Wsuggest-override"       # virtual functions not marked with override
+	    " -Wplacement-new=2"        # no undefined behavior with placement new
 		" -Wno-register"    		# do not warn about deprecated register keyword
 		" -fno-rtti"				# disable RTTI
 		" -fno-exceptions"			# disable exceptions
 		" -fno-threadsafe-statics"	# disable locking during static init
-		" -fno-use-cxa-atexit"      # disable atexit for destructors of global objects 
+		" -fno-use-cxa-atexit"      # disable atexit for destructors of global objects
 	)
 
 	set(ESTP_LDFLAGS
-		" -Wl,--gc-sections"		# omit unused sections (functions and vars)
-		" --specs=nosys.specs"		# no system libraries
+	    " -fcolor-diagnostics"      # color output
+	    " -fno-exceptions"          # disable exceptions
+	    " -fno-unwind-tables"       # omit unwind tables
+	    " -fshort-enums"            # allow enum types to be smallest possible type
+		" -Wl,--gc-sections"		# elide unused sections (functions and vars)
 	)
-	
+
 	set(ESTP_ASMFLAGS
 		" -Wa,--warn"				# enable warnings
 		" -x assembler-with-cpp"    # assembly files contain C preprocessor directives
 	)
-		
-	string(APPEND ESTP_DEFINES
+
+	set(ESTP_DEFINES
 		" -DCROSS_COMPILE=1"
 		" -DESTOPPEL=1"
 	)
-	
+
 	set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 	set(CMAKE_DEBUG_POSTFIX "-dbg")
 	set(CMAKE_RELEASE_POSTFIX "-rel")
@@ -69,19 +81,17 @@ else() # All other targets
 
     if (CMAKE_C_COMPILER_ID MATCHES "GNU")
     	set(ESTP_C_CXX_FLAGS
-	        " -Wall"                    # common warnings
-	        " -Wextra"                  # extra warnings
-	        " -Werror"                  # warnings are errors
-	        " -Wswitch-enum"            # each enum value must appear in switch
-	        " -Wswitch-default"         # switch must have default
-	        " -Wsign-conversion"        # no implicit signedness conversions
-	        " -Wconversion"             # check if conversion might affect value
-	        " -Winit-self"              # no self-initialization
-	        " -Wlogical-op"             # check bitwise vs logical operations
+            " -Wall"                    # common warnings
+            " -Wextra"                  # extra warnings
+            " -Werror"                  # warnings are errors
+            " -Wundef"                  # no evaluation of undefined identifiers in #if
+            " -Wswitch-enum"            # each enum value must appear in switch
+            " -Wswitch-default"         # switch must have default
+            " -Wsign-conversion"        # no implicit signedness conversions
 	        " -Wformat=2"               # printf format checking
 	        " -Wwrite-strings"          # string literals are const
 	        " -Wno-comment"             # nested comments fine
-	        " -fdiagnostics-color"      # color compiler output
+	        " -fcolor-diagnostics"      # color compiler output
 		)
 
         set(ESTP_CFLAGS
@@ -93,6 +103,7 @@ else() # All other targets
             " -Wall"                         # common warnings
             " -Wextra"                       # extra warnings
             " -Werror"                       # warnings are errors
+            " -Wundef"                       # no evaluation of undefined identifiers in #if
             " -Wimplicit-fallthrough"        # no fall-through in switch
             " -Wno-covered-switch-default"   # don't need default for complete switch
             " -Wsign-conversion"             # no implicit signedness conversions
