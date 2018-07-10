@@ -6,6 +6,7 @@ set(ESTOPPEL_ROOT ${CMAKE_SOURCE_DIR})
 if(NOT DEFINED ARCH)
     set(ARCH "HOST")
 endif()
+string(TOUPPER ${ARCH} ARCH)
 
 # Ensure that ARCH is a valid value
 set(EMBEDDED_ARCHS "ARM_CM4F;ARM_CM3;ARM_CM0")
@@ -39,7 +40,6 @@ endif()
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE ${DEFAULT_BUILD_TYPE} CACHE STRING "build type" FORCE)
-  message("Setting build type")
 endif()
 
 # Top-level project
