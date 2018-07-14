@@ -39,4 +39,6 @@
 # CMake build directory
 build
 
+# OS X files
+.DS_Store
 
