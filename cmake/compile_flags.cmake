@@ -11,12 +11,6 @@ if(${ARCH_TYPE_EMBEDDED})
     if(NOT CMAKE_C_COMPILER_ID MATCHES "GNU")
         message(FATAL_ERROR "Non-GNU compilers not supported for embedded targets")
     endif()
-
-    set(CMAKE_EXECUTABLE_SUFFIX ".elf")
-    set(CMAKE_DEBUG_POSTFIX "-dbg")
-    set(CMAKE_RELEASE_POSTFIX "-rel")
-    set(CMAKE_MINSIZEREL_POSTFIX "-rel")
-    set(CMAKE_RELWITHDEBINFO_POSTFIX "-rel")
 endif()
 
 string(APPEND EMBEDDED_C_CXX_FLAGS
@@ -58,11 +52,14 @@ string(APPEND EMBEDDED_CXXFLAGS
 )
 
 string(APPEND EMBEDDED_LDFLAGS
-    " -fcolor-diagnostics"      # color output
+	" -static"					# static linking
+    " -fdiagnostics-color"      # color output
     " -fno-exceptions"          # disable exceptions
     " -fno-unwind-tables"       # omit unwind tables
     " -fshort-enums"            # allow enum types to be smallest possible type
 	" -Wl,--gc-sections"		# elide unused sections (functions and vars)
+	" --specs=nano.specs"		# use minimal newlib config
+	" --specs=nosys.specs"		# 
 )
 
 string(APPEND EMBEDDED_ASMFLAGS

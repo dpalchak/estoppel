@@ -29,6 +29,7 @@ set(CMAKE_RANLIB "${TOOLCHAIN_PATH}/arm-none-eabi-ranlib" CACHE FILEPATH "")
 set(CMAKE_OBJCOPY "${TOOLCHAIN_PATH}/arm-none-eabi-objcopy")
 set(CMAKE_OBJDUMP "${TOOLCHAIN_PATH}/arm-none-eabi-objdump")
 set(CMAKE_SIZEINFO "${TOOLCHAIN_PATH}/arm-none-eabi-size")
+set(CMAKE_CPP "${TOOLCHAIN_PATH}/arm-none-eabi-cpp")
 
 # Only look for libraries and include files in the toolchain path
 set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PATH})

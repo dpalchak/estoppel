@@ -1,0 +1,213 @@
+/*
+ * Linker script for STM32L4xx series devices. This script is intended to be
+ * pre-processed using the C preprocessor before being used.
+ *
+ * The following MEMORY regions must be defined elsewhere:
+ * FLASH, SRAM1, SRAM2
+ *
+ * The following symbols are assumed to exist in the code:
+ *   Reset_Handler : Entry point for execution
+ *
+ * The following preprocessor symbols may be be defined to a true or false value
+ * to control the inclusion or exclusion of sections
+ * KEEP_GLOBAL_DTORS
+ * KEEP_UNWIND_TABLES
+ * KEEP_EXCEPTIONS
+ * STARTUP_COPY_MULTIPLE
+ * STARTUP_CLEAR_BSS_MULTIPLE
+ *
+ * The following symbols may be defined to a numeric value
+ * HEAP_SIZE
+ * MIN_STACK_SIZE
+ *
+ */
+
+ENTRY(Reset_Handler)
+
+SECTIONS
+{
+    .vectors : {
+        /* Exception and interrupt vectors */
+        KEEP(*(.isr_vector))
+    } >FLASH
+
+    .build_info ALIGN(4) : {
+        PROVIDE(__build_info_start__ = .);
+        KEEP(*(.build_info))
+        PROVIDE(__build_info_end__ = .);
+    } >FLASH
+
+    /* Normal code */
+    .text : {
+        *(.text*)
+
+        /* Initialization and finalization routines */
+        KEEP(*(.init))
+        KEEP(*(.fini))
+    } >FLASH
+
+    /* Global Constructors */
+    .ctors : ALIGN(4) {
+        *crtbegin.o(.ctors)
+        *crtbegin?.o(.ctors)
+        *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+        *(SORT(.ctors.*))
+        *(.ctors)
+    } >FLASH
+
+#if KEEP_GLOBAL_DTORS
+    /* Global Destructors */
+    .dtors : ALIGN(4) {
+         *crtbegin.o(.dtors)
+         *crtbegin?.o(.dtors)
+         *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+         *(SORT(.dtors.*))
+         *(.dtors)
+    } >FLASH
+#endif
+
+    /* Array of pre-initialization functions */
+    .preinit_array : ALIGN(4) {
+        PROVIDE_HIDDEN (__preinit_array_start = .);
+        KEEP(*(.preinit_array))
+        PROVIDE_HIDDEN (__preinit_array_end = .);
+    } >FLASH
+
+    /* Array of initialization fkunctions */
+    .init_array : ALIGN(4) {
+        PROVIDE_HIDDEN (__init_array_start = .);
+        KEEP(*(SORT(.init_array.*)))
+        KEEP(*(.init_array))
+        PROVIDE_HIDDEN (__init_array_end = .);
+    } >FLASH
+
+#if KEEP_GLOBAL_DTORS
+    /* Array of finalization functions */
+    .fini_array : ALIGN(4) {
+        PROVIDE_HIDDEN (__fini_array_start = .);
+        KEEP(*(SORT(.fini_array.*)))
+        KEEP(*(.fini_array))
+        PROVIDE_HIDDEN (__fini_array_end = .);
+    } >FLASH
+#endif
+
+    /* Read-only data */
+    .rodata : ALIGN(4) {
+        *(vtable)
+        *(.rodata*)
+    } >FLASH
+
+    /* Exception handling frame */
+    .eh_frame : {
+        KEEP(*(.eh_frame*))
+    } > FLASH
+
+#if KEEP_EXCEPTIONS
+    /* ARM exception tables */
+    .ARM.extab : {
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+    } >FLASH
+#endif
+
+#if KEEP_UNWIND_TABLES
+    /* ARM stack unwinding tables */
+    .ARM.exidx : {
+        __exidx_start = .;
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+        __exidx_end = .;
+    } >FLASH
+#endif
+
+    .data : ALIGN(4) {
+        __data_start__ = .;
+        *(.data*)
+        . = ALIGN(4);
+        __data_end__ = .;
+    } >SRAM1 AT>FLASH
+
+    PROVIDE(__etext = LOADADDR(.data));
+
+    .bss ALIGN(16) (NOLOAD) : {
+        __bss_start__ = .;
+        *(.bss*)
+        *(COMMON)
+        . = ALIGN(4);
+        __bss_end__ = .;
+    } >SRAM1
+
+#if STARTUP_COPY_MULTIPLE
+    /* To use define __STARTUP_COPY_MULTIPLE in startup_ARMCMx.S */
+    .copy_table ALIGN(4) : {
+        __copy_table_start__ = .;
+        LONG (__etext)
+        LONG (__data_start__)
+        LONG (__data_end__ - __data_start__)
+        LONG (__etext2)
+        LONG (__data2_start__)
+        LONG (__data2_end__ - __data2_start__)
+        __copy_table_end__ = .;
+    } >FLASH
+#endif
+
+#if STARTUP_CLEAR_BSS_MULTIPLE
+    /* To use define __STARTUP_CLEAR_BSS_MULTIPLE in startup_ARMCMx.S */
+    .zero_table ALIGN(4) : {
+        __zero_table_start__ = .;
+        LONG (__bss_start__)
+        LONG (__bss_end__ - __bss_start__)
+        LONG (__bss2_start__)
+        LONG (__bss2_end__ - __bss2_start__)
+        __zero_table_end__ = .;
+    } >FLASH
+#endif
+
+    .persistent_data ALIGN(4) (NOLOAD) : {
+        __persistent_start__ = .;
+        *(.persistent*)
+        . = ALIGN(4);
+        __persistent_end__ = .;
+    } >SRAM1
+
+#ifdef HEAP_SIZE
+    .heap ALIGN(4) (NOLOAD) : {
+        __end__ = .;
+        PROVIDE(end = .);
+        . = . + HEAP_SIZE;
+        __heap_end__ = .;
+    } >SRAM1
+#endif
+
+    /* Stack takes up all the remaining RAM */
+    __stack_bottom__ = .;
+    __stack_top__ = ORIGIN(SRAM1) + LENGTH(SRAM1);
+    PROVIDE(__stack = __stack_top__);
+
+#ifdef MIN_STACK_SIZE
+    /* Check that stack meets or exceeds minimum size */
+    ASSERT((__stack_top__ - __stack_bottom__) >= MIN_STACK_SIZE, "Stack size smaller than specified minimum");
+#endif
+
+    /* Discard unused sections explicitly */
+    /DISCARD/ : {
+
+#if !KEEP_GLOBAL_DTORS
+         *(.dtors*)
+         *(.fini)
+        *(.fini_array*)
+#endif
+
+#if !KEEP_EXCEPTIONS
+        *(.eh_frame*)
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+#endif
+
+#if !KEEP_UNWIND_TABLES
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+#endif
+
+    }
+
+    .ARM.attributes 0 : {
+        *(.ARM.attributes)
+    }
+}
