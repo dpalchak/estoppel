@@ -1,14 +1,17 @@
 
-if(NOT ${ARCH} STREQUAL "ARM_CM4F")
-    return()
-endif()
+project(cm4f_sandbox C CXX ASM)
 
-add_embedded_executable(cm4f_sandbox
-	main.cc
+estp_add_firmware_executable(
+    NAME
+        cm4f_sandbox.elf
+    ARCH
+        armcm4f
+    SOURCES
+    	main.cc
+	LIBRARIES PRIVATE
+        libstm32l4sdk_hal-stm32l486
+        libstm32l4x6xg
 )
-
-target_link_libraries(cm4f_sandbox PRIVATE
-    stm32l4_sdk_hal
-	stm32l4x6xg	 
-)
+	   
+    
 

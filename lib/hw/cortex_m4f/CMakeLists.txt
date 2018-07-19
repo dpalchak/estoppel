@@ -5,7 +5,12 @@ endif()
 
 project(cm4f_startup C CXX ASM)
 
-add_library(cm4f_startup STATIC
-	startup_ARMCM4.S
+estp_add_static_library(
+    NAME
+        libstartup-armcm4f
+    ARCH
+        armcm4f
+    SOURCES
+    	startup_ARMCM4.S
 )
 

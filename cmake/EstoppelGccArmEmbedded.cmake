@@ -1,9 +1,11 @@
 # A CMake toolchain file for cross-compiling for arm-none-eabi targets
+
 # Require CMake >= 3.10 in order to support C++17 standard
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
 # The Generic system name is used for embedded targets (targets without OS) in Cmake
 set(CMAKE_SYSTEM_NAME "Generic")
+set(CMAKE_SYSTEM_PROCESSOR "arm")
 
 # Set a toolchain path. You only need to set this if the toolchain isn't in
 # your system path

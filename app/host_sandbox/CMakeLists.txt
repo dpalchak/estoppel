@@ -1,14 +1,13 @@
 
-if(NOT ${ARCH_TYPE_HOST})
-    return()
-endif()
+project(Host_Sandbox C CXX)
 
-project(Host_Sandbox)
-
-add_executable(host_sandbox
-    main.cc
-)
-
-target_compile_definitions(host_sandbox PRIVATE
-    "SPECIAL_MESSAGE=\"Greetings\ from\ nowhere\""
+estp_add_executable(
+    NAME
+        host_sandbox
+    ARCH
+        host32
+    SOURCES
+        main.cc
+    DEFINES
+        PRIVATE SPECIAL_MESSAGE=\"Greetings\ from\ nowhere\"
 )
