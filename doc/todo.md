@@ -1,7 +1,7 @@
 Estoppel TODO list and idea board
 
 ## Desired C++17 Features
-- Replace compiler-specific attributes with standard ones (e.g. [[nodiscard]], etc)
+- Replace compiler-specific attributes with standard ones (e.g. ([nodiscard]), etc)
 - Replace SFINAE templates with constexpr if
 - Create global vars as inline constexpr values
 - Improve assert handler
@@ -13,7 +13,7 @@ Estoppel TODO list and idea board
 - Use structured bindings for multiple return items
 - Consider use of std::optional/std::any/std::variant (use std::get_if for conditional retrival)
 - Evaluate std::to_chars instead of format library
-- std::error_code ([https://en.cppreference.com/w/cpp/error/error_code])
+- std::error_code (<https://en.cppreference.com/w/cpp/error/error_code)>
 - std::void_t<...> for expression SFINAE
 - Add class template argument deduction helpers
 - Use std::span instead of custom ArrayRef
@@ -58,7 +58,7 @@ Estoppel TODO list and idea board
 - Sleep controller
 - NRF51 UART driver
 - Protobuf support
-- NVIC CMSIS replacement 
+- NVIC CMSIS replacement
 - FPU CMSIS replacement
 - Deadline stack?
 - Persistent boot counter w/ linker support
@@ -79,14 +79,14 @@ Estoppel TODO list and idea board
 ```c++
 template<PixelFormat>
 Frame {
-	BitFieldArray pixels[]
+	BitFieldArray pixels()
 	Size
 	Origin
 	MemoryOrder
-	
+
 	Pixel {
 	}
-	
+
 	Canvas : public CanvasInterface {
 	}
 }
@@ -152,7 +152,8 @@ type_id_t type_id() { return &type_id<T>; }
 ## Resources
 
 ### modm
-[http://modm.io/] 
+<http://modm.io/>
+
 All resources are template classes (including pins)
 Resources "assigned" at compile time by instantiating templates, e.g.
 ```c++
@@ -187,21 +188,25 @@ alias FlashMemory = platform::GigadeviceFlash;
 Application config files also defines static resources such as buffers, scheduler, etc
 
 ### modm Register Abstraction
-[https://github.com/modm-io/modm/blob/develop/src/modm/architecture/interface/register.hpp](modm Register Abstraction)
+<https://github.com/modm-io/modm/blob/develop/src/modm/architecture/interface/register.hpp>
+
 Uses enumerations to define bit fields
 Provides overloaded operators for type-safe bit twiddling
 
 ### Variadic CRTP
-[http://stevedewhurst.com/once_weakly/once-weakly20170328/once-weakly20170328.pdf](Variadiac CRTP implementation)
+<http://stevedewhurst.com/once_weakly/once-weakly20170328/once-weakly20170328.pdf>
+
 Can be used to compose types statically with specific features or operations, such as restricted numeric types
 Could be used to implement memory-mapped registers (read-only, write-only, etc)
 
 ### Boost Type.Erasure
-[https://github.com/boost-experimental/te]
+<https://github.com/boost-experimental/te>
+
 Experimental library for run-time polymorphism
 
 ### Compilation optimizations
-[https://bitbashing.io/embedded-cpp.html]
+<https://bitbashing.io/embedded-cpp.html>
+
 - -fnoexpections
 - -fno-non-call-exceptions
 - -fno-rtti
@@ -214,35 +219,36 @@ Experimental library for run-time polymorphism
 - -findirect-inlining
 
 ### C++ Guideline Support Library (GSL)
-Single header implementation
-[https://github.com/martinmoene/gsl-lite]
+[Single header implementation](https://github.com/martinmoene/gsl-lite)
 
 ### Expected<T>
-[https://github.com/martinmoene/expected-lite]
+<https://github.com/martinmoene/expected-lite>
+
 Alternative to exceptions for error handling
 
 ### Statement Expressions
+<https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html>
+
 Feature of gcc and clang
-[https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html]
 Used for CHECK() macro
 
 ### Cevelop IDE
-[https://www.cevelop.com/]
+<https://www.cevelop.com/>
 
 ### Mockator Test Double framework
-[http://www.mockator.com/]
-Also has Eclipse plugin for automatically creating test doubles
-Works well with Cevelop
+<http://www.mockator.com/>
+
+* Also has Eclipse plugin for automatically creating test doubles
+* Works well with Cevelop
 
 ### Open source libraries
-Facebook Folly [https://github.com/facebook/folly/blob/master/folly/docs/Overview.md]
+[Facebook Folly](https://github.com/facebook/folly/blob/master/folly/docs/Overview.md)
 - Packed pointers
 
-Google Abseil [https://abseil.io/about/intro]
+[Google Abseil](https://abseil.io/about/intro)
 
 ## References
-CppCon 2017 Presentations
-[https://github.com/CppCon/CppCon2017/tree/master/Presentations]
+[CppCon 2017 Presentations](https://github.com/CppCon/CppCon2017/tree/master/Presentations)
 - Undefined behavior
 - Free functions
 - SFINAE
