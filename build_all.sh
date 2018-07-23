@@ -6,5 +6,7 @@ $ESTP_ROOT_DIR/bootstrap.sh
 
 for ARCH in host arm
 do
-    cmake --build $ESTP_ROOT_DIR/build/$ARCH
+    cmake --build $ESTP_ROOT_DIR/build/$ARCH -- $@
+    echo
+    echo
 done
