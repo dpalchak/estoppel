@@ -56,7 +56,6 @@ set(ESTP_GNU_ARM_COMMON_FLAGS
     "-fshort-enums"            # allow enum types to be smallest possible type
     "-finline-small-functions" # inline functions their body is smaller than the call overhead
     "-findirect-inlining"      # allow indirect calls to be inlined
-    "-fno-implicit-templates"  # require explicit instantiation of all templates
     "-g3"                      # all builds include debug info
 )
 
@@ -69,6 +68,7 @@ set(ESTP_GNU_ARM_CXX_FLAGS
     "-fno-exceptions"          # disable exceptions
     "-fno-threadsafe-statics"  # disable locking during static init
     "-fno-use-cxa-atexit"      # disable atexit for destructors of global objects
+    "-fno-implicit-templates"  # require explicit instantiation of all templates
 )
 
 set(ESTP_GNU_ARM_LINK_FLAGS

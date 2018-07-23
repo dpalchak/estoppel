@@ -9,8 +9,8 @@ estp_add_firmware_executable(
     SOURCES
     	main.cc
 	LIBRARIES PRIVATE
-        libstm32l4sdk_hal-stm32l486
-        libstm32l4x6xg
+        stm32l4sdk_hal-stm32l486
+        stm32l4x6xg
 )
 	   
     

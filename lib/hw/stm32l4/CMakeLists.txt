@@ -19,11 +19,11 @@ add_custom_target(gen_stm32l4_link_script DEPENDS "stm32l4.ld")
 
 estp_add_interface_library(
     NAME
-        libstm32l4x6xg
+        stm32l4x6xg
     ARCH
         armcm4f
     LIBRARIES
-        libstartup-armcm4f
+        startup-armcm4f
         # The order of the scripts here is important
         "-T${CMAKE_CURRENT_SOURCE_DIR}/stm32l4x6xg_memory.ld"
         "-T${CMAKE_CURRENT_BINARY_DIR}/stm32l4.ld"
@@ -34,7 +34,7 @@ estp_add_interface_library(
 # Configuration library for STM32L4 SDK
 estp_add_interface_library(
     NAME
-        libstm32l4sdk_config-stm32l486
+        stm32l4sdk_config-stm32l486
     ARCH
         armcm4f
     SOURCES
@@ -44,5 +44,4 @@ estp_add_interface_library(
     DEFINES
         "STM32L486xx=1"
 )
-        
-        
+

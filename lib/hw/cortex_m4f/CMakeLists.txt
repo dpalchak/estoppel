@@ -7,7 +7,7 @@ project(cm4f_startup C CXX ASM)
 
 estp_add_static_library(
     NAME
-        libstartup-armcm4f
+        startup-armcm4f
     ARCH
         armcm4f
     SOURCES
