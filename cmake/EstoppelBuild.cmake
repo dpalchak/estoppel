@@ -78,8 +78,8 @@ set(ESTP_GNU_ARM_LINK_FLAGS
     "-fno-unwind-tables"       # omit unwind tables
     "-fshort-enums"            # allow enum types to be smallest possible type
     "-Wl,--gc-sections"        # elide unused sections (functions and vars)
-    "--specs=nano.specs"       # use minimal newlib config
-    "--specs=nosys.specs"      # use empty syscalls
+    #"--specs=nano.specs"       # use minimal newlib config
+    #"--specs=nosys.specs"      # use empty syscalls
 )
 
 set(ESTP_GNU_ARM_ASM_FLAGS

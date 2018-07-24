@@ -11,7 +11,7 @@ estp_add_firmware_executable(
 	LIBRARIES PRIVATE
         stm32l4sdk_hal-stm32l486
         stm32l4x6xg
+    LDFLAGS PRIVATE
+        --specs=nano.specs       # use minimal newlib config
+        --specs=nosys.specs      # use empty syscalls
 )
-	   
-    
-
