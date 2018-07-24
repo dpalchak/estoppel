@@ -18,7 +18,7 @@ function(estp_parse_arguments input_text)
     set(options )
     set(oneValueArgs PREFIX)
     set(multiValueArgs FLAG_ARGS VALUE_ARGS LIST_ARGS REQUIRED_ARGS)
-    cmake_parse_arguments(NAMES_OF 
+    cmake_parse_arguments(NAMES_OF
         "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(NAMES_OF_UNPARSED_ARGUMENTS)
@@ -45,7 +45,7 @@ function(estp_parse_arguments input_text)
         "${NAMES_OF_LIST_ARGS}"
         ${input_text}
         )
-    
+
     set(unparsed_args_var_name "${OUT_PREFIX}_UNPARSED_ARGUMENTS")
     if("${${unparsed_args_var_name}}")
         message(FATAL_ERROR "Failed to parse arguments: ${${unparsed_args_var_name}}")
@@ -71,9 +71,9 @@ function(estp_target_lang_compile_options TARGET_NAME LANG)
         message(FATAL_ERROR "Unknown target ${TARGET_NAME}")
         return()
     endif()
-    
+
     estp_parse_arguments("${ARGN}" LIST_ARGS PRIVATE PUBLIC INTERFACE)
-    
+
     set(ACCESS_KEYWORDS "PRIVATE" "PUBLIC" "INTERFACE")
     set(OPT_STRING "")
     foreach(ACCESS PRIVATE PUBLIC INTERFACE)
@@ -131,7 +131,7 @@ function(estp_add_executable)
     if(ARG_CFLAGS)
         target_compile_options(${ARG_NAME} ${ARG_CFLAGS})
     endif()
-    
+
     if(ARG_CXXFLAGS)
         estp_target_lang_compile_options(${ARG_NAME} CXX ${ARG_CXXFLAGS})
     endif()
@@ -270,7 +270,7 @@ endfunction() #estp_add_interface_library
 function(estp_add_firmware_executable)
     # Add the executable first, to make sure the arguments are valid
     estp_add_executable(${ARGN})
-    
+
     # Extract the NAME argument only
     # First find the index of the keyword 'NAME'
     list(FIND ARGN NAME NAME_INDEX)
@@ -278,7 +278,7 @@ function(estp_add_firmware_executable)
     # following the keyword 'NAME'
     math(EXPR NAME_INDEX "${NAME_INDEX}+1")
     list(GET ARGN ${NAME_INDEX} TARGET_NAME)
-    
+
     if(NOT TARGET ${TARGET_NAME})
         # Target wasn't added, which means it's not supported by this toolchain
         return()
@@ -288,43 +288,44 @@ function(estp_add_firmware_executable)
     if(${TARGET_PREFIX} MATCHES "NOTFOUND")
         set(TARGET_PREFIX "")
     endif()
-    
+
     get_target_property(TARGET_OUTPUT_NAME ${TARGET_NAME} OUTPUT_NAME)
     if(${TARGET_OUTPUT_NAME} MATCHES "NOTFOUND")
         set(TARGET_OUTPUT_NAME ${TARGET_NAME})
     endif()
-    
+
     get_target_property(TARGET_SUFFIX ${TARGET_NAME} SUFFIX)
     if(${TARGET_SUFFIX} MATCHES "NOTFOUND")
         set(TARGET_SUFFIX "")
     endif()
-    
+
     set(EXE_FILE_NAME "${TARGET_PREFIX}${TARGET_OUTPUT_NAME}${TARGET_SUFFIX}")
-	set(MAP_FILE_NAME "${TARGET_PREFIX}${TARGET_OUTPUT_NAME}.map")
-    set(HEX_FILE_NAME "${TARGET_PREFIX}${TARGET_OUTPUT_NAME}.hex")
-    set(BIN_FILE_NAME "${TARGET_PREFIX}${TARGET_OUTPUT_NAME}.bin")
+
+    string(REPLACE ".elf" ".map" MAP_FILE_NAME "${EXE_FILE_NAME}")
+    string(REPLACE ".elf" ".bin" BIN_FILE_NAME "${EXE_FILE_NAME}")
+    string(REPLACE ".elf" ".hex" HEX_FILE_NAME "${EXE_FILE_NAME}")
 
     # Generate map output file
     target_link_libraries(${TARGET_NAME} PRIVATE "-Wl,-Map=${MAP_FILE_NAME}")
-    
+
     # Create binary image
     add_custom_command(
-        OUTPUT ${BIN_FILE_NAME}
+        TARGET ${TARGET_NAME}
         COMMAND ${CMAKE_OBJCOPY} -O binary ${EXE_FILE_NAME} ${BIN_FILE_NAME}
         DEPENDS ${TARGET_NAME}
         WORKING_DIRECTORY "${TARGET_OUTPUT_DIR}"
         COMMENT "Create binary image: ${BIN_FILE_NAME}"
     )
-    
+
     # Create hex image
     add_custom_command(
-        OUTPUT ${HEX_FILE_NAME}
+        TARGET ${TARGET_NAME}
         COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXE_FILE_NAME} ${HEX_FILE_NAME}
         DEPENDS ${TARGET_NAME}
         WORKING_DIRECTORY "${TARGET_OUTPUT_DIR}"
         COMMENT "Create ihex image: ${HEX_FILE_NAME}"
     )
-    
+
     # Print executable size info
     add_custom_command(
         TARGET ${TARGET_NAME}
