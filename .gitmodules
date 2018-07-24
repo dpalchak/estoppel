@@ -1,3 +1,6 @@
 [submodule "expected-lite"]
 	path = third_party/expected-lite/upstream
 	url = https://github.com/martinmoene/expected-lite.git
+[submodule "catch2"]
+	path = third_party/catch2/upstream
+	url = https://github.com/catchorg/Catch2
