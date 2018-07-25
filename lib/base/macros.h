@@ -49,22 +49,28 @@
 // Specify section for placement
 #define SECTION(s)  __attribute__((section(s)))
 
+// Specify a weak symbol
+#define WEAK __attribute__((weak))
+
 // Marks a declaration as used, in cases where the compiler can't see the
 // connection (e.g. only used from assembly or ABI).
-#define USED __attribute__((__used__))
+#define USED __attribute__((used))
+
+// Create a symbol alias
+#define ALIAS(s) __attribute__((alias (s)))
 
 // Tricks the compiler into thinking a variable is used
 // We name this like a macro, even though it isn't, because it operates like one
 template<class T> void FORCE_USED( const T& ) { }
 
 // Marks a struct/class as packed
-#define PACKED __attribute__((__packed__))
+#define PACKED __attribute__((packed))
 
 // Aligns a variable to the maximum useful alignment for variables of the same size
-#define ALIGNED __attribute__((__aligned__))
+#define ALIGNED __attribute__((aligned))
 
 // Specifies a specific alignment for a variable
-#define ALIGN(n) __attribute__((__aligned__((n))))
+#define ALIGN(n) __attribute__((aligned (n)))
 
 // Marks a function as not returning
 #define NO_RETURN __attribute__((noreturn))
