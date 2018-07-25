@@ -31,7 +31,7 @@ Estoppel TODO list and idea board
 - Default arguments instead of overloaded methods
 - Use std::optional instead of status value+inout parameter (or Expected<T>)
 - Use gsl::narrow_cast<> or gsl::narrow for narrowing operations
-- Switch to prefering free functions over methods
+- Switch to preferring free functions over methods
 - Use c++17 constexpr features
 - switch to stream-like handling for I/O, logging, tracing (easily overridden)
 - Consider user-defined literals for units
@@ -204,20 +204,6 @@ Could be used to implement memory-mapped registers (read-only, write-only, etc)
 
 Experimental library for run-time polymorphism
 
-### Compilation optimizations
-<https://bitbashing.io/embedded-cpp.html>
-
-- -fnoexpections
-- -fno-non-call-exceptions
-- -fno-rtti
-- -fno-use-cxa-atexit
-- -ffreestanding
-- -fstack-protector-*
-- -fno-common
-- -fno-threadsafe-statics
-- -finline-small-functions
-- -findirect-inlining
-
 ### C++ Guideline Support Library (GSL)
 [Single header implementation](https://github.com/martinmoene/gsl-lite)
 
@@ -262,5 +248,18 @@ Used for CHECK() macro
 - Concepts-like TMP library for constraints
 
 
+# Completed
+### Compilation optimizations
+<https://bitbashing.io/embedded-cpp.html>
 
+- -fnoexpections
+- -fno-non-call-exceptions
+- -fno-rtti
+- -fno-use-cxa-atexit
+- -ffreestanding
+- -fstack-protector-*
+- -fno-common
+- -fno-threadsafe-statics
+- -finline-small-functions
+- -findirect-inlining
 
