@@ -247,6 +247,10 @@ Used for CHECK() macro
 
 [Google Abseil](https://abseil.io/about/intro)
 
+### Compile-time basename function for file names
+<https://blog.galowicz.de/2016/02/20/short_file_macro/>
+
+
 ## References
 [CppCon 2017 Presentations](https://github.com/CppCon/CppCon2017/tree/master/Presentations)
 - Undefined behavior
