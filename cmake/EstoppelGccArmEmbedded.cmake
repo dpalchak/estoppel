@@ -28,10 +28,10 @@ set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_C_COMPILER> <FLAGS> <DEFINES> -o <OBJECT> -
 # cross-compile correctly otherwise
 set(CMAKE_AR "${TOOLCHAIN_PATH}/arm-none-eabi-ar" CACHE FILEPATH "")
 set(CMAKE_RANLIB "${TOOLCHAIN_PATH}/arm-none-eabi-ranlib" CACHE FILEPATH "")
-set(CMAKE_OBJCOPY "${TOOLCHAIN_PATH}/arm-none-eabi-objcopy")
-set(CMAKE_OBJDUMP "${TOOLCHAIN_PATH}/arm-none-eabi-objdump")
-set(CMAKE_SIZEINFO "${TOOLCHAIN_PATH}/arm-none-eabi-size")
-set(CMAKE_CPP "${TOOLCHAIN_PATH}/arm-none-eabi-cpp")
+set(CMAKE_OBJCOPY "${TOOLCHAIN_PATH}/arm-none-eabi-objcopy" CACHE FILEPATH "")
+set(CMAKE_OBJDUMP "${TOOLCHAIN_PATH}/arm-none-eabi-objdump" CACHE FILEPATH "")
+set(CMAKE_SIZEINFO "${TOOLCHAIN_PATH}/arm-none-eabi-size" CACHE FILEPATH "")
+set(CMAKE_CPP "${TOOLCHAIN_PATH}/arm-none-eabi-cpp" CACHE FILEPATH "")
 
 # Only look for libraries and include files in the toolchain path
 set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PATH})
