@@ -1,5 +1,5 @@
 
-#TODO(palchak): setup as unit test
+#TODO(palchak): setup as unit test executable
 foreach(ARCH host host32 armcm4f)
     estp_add_static_library(
         NAME
@@ -8,6 +8,7 @@ foreach(ARCH host host32 armcm4f)
             ${ARCH}
         SOURCES
             meta_list_test.cc
+            meta_string_test.cc
         INCLUDE_DIRS PUBLIC
             ${ESTP_ROOT}/lib
     )
