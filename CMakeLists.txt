@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.10)
 include(CMakePrintHelpers)
 
 set(ESTOPPEL_ROOT ${CMAKE_SOURCE_DIR})
+set(ESTP_ROOT ${ESTOPPEL_ROOT})
 
 if(NOT DEFINED ESTP_ARCH)
     message(FATAL_ERROR "ESTP_ARCH not defined")
@@ -26,6 +27,10 @@ include("${ESTOPPEL_ROOT}/cmake/EstoppelBuild.cmake")
 # Add all of the build libraries supported by the toolchain we're using
 # The build libraries set the necessary compiler and linker flags for every target
 # All Estoppel targets depend on one or more build libraries
+set(ESTP_ARM_ARCHS arm armcm4f armcm4 armcm3 armcm0p)
+set(ESTP_HOST_ARCHS host host32)
+set(ESTP_ALL_ARCHS ${ESTP_ARM_ARCHS} ${ESTP_HOST_ARCHS})
+
 if(ESTP_ARCH MATCHES "arm")
     if(NOT CMAKE_C_COMPILER_ID MATCHES "GNU")
         message(FATAL_ERROR "Unsupported compiler for ARM architecture: ${CMAKE_C_COMPILER_ID}")

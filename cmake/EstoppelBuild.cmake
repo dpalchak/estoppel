@@ -44,6 +44,7 @@ set(ESTP_GNU_ARM_WARNINGS
 )
 
 set(ESTP_GNU_ARM_COMMON_FLAGS
+    "-fwrapv"                  # signed numbers wrap around on arithemtic overflow/underflow
     "-fdiagnostics-color"      # color compiler output
     "-fomit-frame-pointer"     # no frame pointer
     "-ffunction-sections"      # one section per function
@@ -78,8 +79,6 @@ set(ESTP_GNU_ARM_LINK_FLAGS
     "-fno-unwind-tables"       # omit unwind tables
     "-fshort-enums"            # allow enum types to be smallest possible type
     "-Wl,--gc-sections"        # elide unused sections (functions and vars)
-    #"--specs=nano.specs"       # use minimal newlib config
-    #"--specs=nosys.specs"      # use empty syscalls
 )
 
 set(ESTP_GNU_ARM_ASM_FLAGS
@@ -106,6 +105,7 @@ set(ESTP_HOST_DEFINES
 set(ESTP_GNU_HOST_COMMON_FLAGS
     "-fdiagnostics-color"      # color compiler output
     "-fexceptions"             # propagate exceptions (from C++)
+    "-fwrapv"                  # signed numbers wrap around on arithemtic overflow/underflow
 )
 
 set(ESTP_CLANG_HOST_WARNINGS
@@ -124,6 +124,7 @@ set(ESTP_CLANG_HOST_WARNINGS
 set(ESTP_CLANG_HOST_COMMON_FLAGS
     "-fcolor-diagnostics"           # color compiler output
     "-fexceptions"                  # propagate exceptions (from C++)
+    "-fwrapv"                       # signed numbers wrap around on arithemtic overflow/underflow
 )
 
 set(ESTP_CLANG_HOST_CXX_FLAGS
@@ -261,4 +262,6 @@ function(estp_add_build_library ARCH)
     foreach(PARENT_ARCH ${ARGN})
         target_link_libraries(${LIB_NAME} INTERFACE estoppel_build-${PARENT_ARCH})
     endforeach()
+
+    list(APPEND ESTP_ACTIVE_ARCHS ${ARCH})
 endfunction()
