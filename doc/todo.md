@@ -1,5 +1,16 @@
 Estoppel TODO list and idea board
 
+## Punchlist
+- MetaString compile time string library test cases
+- Assertion framework
+- Unit test infrastructure
+- Unit tests for MetaString
+- Unit tests for assertion framework
+- Create blinky app for STM32L4
+- Migrate data structures
+- Write test cases for data structures
+
+
 ## Desired C++17 Features
 - Replace compiler-specific attributes with standard ones (e.g. ([nodiscard]), etc)
 - Replace SFINAE templates with constexpr if
