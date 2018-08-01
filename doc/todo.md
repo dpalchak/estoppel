@@ -1,7 +1,6 @@
 Estoppel TODO list and idea board
 
 ## Punchlist
-- MetaString compile time string library test cases
 - Assertion framework
 - Unit test infrastructure
 - Unit tests for MetaString
