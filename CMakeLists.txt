@@ -29,13 +29,13 @@ include("${ESTOPPEL_ROOT}/cmake/EstoppelBuild.cmake")
 # All Estoppel targets depend on one or more build libraries
 set(ESTP_ARM_ARCHS arm armcm4f armcm4 armcm3 armcm0p)
 set(ESTP_HOST_ARCHS host host32)
-set(ESTP_ALL_ARCHS ${ESTP_ARM_ARCHS} ${ESTP_HOST_ARCHS})
+set(ESTP_ARCHS ${ESTP_ARM_ARCHS} ${ESTP_HOST_ARCHS})
 
 if(ESTP_ARCH MATCHES "arm")
     if(NOT CMAKE_C_COMPILER_ID MATCHES "GNU")
         message(FATAL_ERROR "Unsupported compiler for ARM architecture: ${CMAKE_C_COMPILER_ID}")
     endif()
-    
+
     # Generic arm build target
     estp_add_build_library(arm)
 
@@ -54,7 +54,7 @@ elseif(ESTP_ARCH MATCHES "host")
 
 else()
     message(FATAL_ERROR "Unknown architecture: ${ESTP_ARCH}")
-    
+
 endif()
 
 
