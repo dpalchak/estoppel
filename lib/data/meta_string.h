@@ -70,7 +70,7 @@ struct StringLiteralTooLong {};
 // or null if the index is out of range
 template<size_t N, size_t M>
 constexpr char GetCharOrNull(StringLiteral<M> str) {
-	return (N < M) ? str[N] : '\0';
+	return str[(N < M) ? N : M-1];
 }
 
 // Used to check MetaString length

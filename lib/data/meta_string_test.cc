@@ -46,7 +46,7 @@ static_assert(Zipped{} == kZipped, "Test: MAKE_METASTRING(Zipped)");
 
 static_assert(kEmptyString == MAKE_METASTRING_16(""), "Test: MAKE_METASTRING(\"\")");
 
-static_assert(MetaString<0x00,0x32,0x64,0x96,0xC8,0xFA>{} ==
+static_assert(MetaString<0x00,0x32,0x64,char(0x96),char(0xC8),char(0xFA)>{} ==
 	MAKE_METASTRING_16("\x00\x32\x64\x96\xC8\xFA"),
 	"Test: MAKE_METASTRING('\x00\x32\x64\x96\xC8\xFA')");
 
