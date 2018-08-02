@@ -1,6 +1,6 @@
 
 #TODO(palchak): setup as unit test executable
-foreach(ARCH host host32 armcm4f)
+foreach(ARCH ${ESTP_ARCHS})
     estp_add_static_library(
         NAME
             data_test-${ARCH}

@@ -335,3 +335,67 @@ function(estp_add_firmware_executable)
         COMMENT "Image size:"
     )
 endfunction()
+
+# A shortcut for adding a set of unit tests
+function(estp_add_test_executable)
+    estp_parse_arguments("${ARGN}"
+        VALUE_ARGS
+            NAME ARCH
+        LIST_ARGS
+            SOURCES LIBRARIES INCLUDE_DIRS DEFINES CFLAGS CXXFLAGS LDFLAGS DEPENDENCIES
+        REQUIRED_ARGS
+            NAME ARCH SOURCES
+    )
+
+    if(NOT (${ARCH} IN_LIST ESTP_HOST_ARCHS))
+        message(FATAL_ERROR "Test executables must specify a host architecture")
+    endif()
+
+    # First get the build library for the specified architecture
+    estp_get_arch_build_library(ARCH_BUILD_LIB ${ARG_ARCH})
+    if(ARCH_BUILD_LIB)
+        message(STATUS "Adding test executable ${ARG_NAME} (${ARG_ARCH})")
+    else()
+        message(STATUS "Skipping test executable ${ARG_NAME} (${ARG_ARCH})")
+        return() # Bail out
+    endif()
+
+    add_executable(${ARG_NAME} ${ARG_SOURCES})
+
+    # Add private dependencies on architecture-specific library and Catch2 test runner
+    target_link_libraries(${ARG_NAME} PRIVATE 
+        ${ARCH_BUILD_LIB}
+        catch2_test_main-${ARG_ARCH}
+    )
+
+    if(ARG_DEFINES)
+        target_compile_definitions(${ARG_NAME} ${ARG_DEFINES})
+    endif()
+
+    if(ARG_CFLAGS)
+        target_compile_options(${ARG_NAME} ${ARG_CFLAGS})
+    endif()
+
+    if(ARG_CXXFLAGS)
+        estp_target_lang_compile_options(${ARG_NAME} CXX ${ARG_CXXFLAGS})
+    endif()
+
+    if(ARG_INCLUDE_DIRS)
+        target_include_directories(${ARG_NAME} ${ARG_INCLUDE_DIRS})
+    endif()
+
+    if(ARG_LDFLAGS)
+        target_link_libraries(${ARG_NAME} ${ARG_LDFLAGS})
+    endif()
+
+    if(ARG_LIBRARIES)
+        target_link_libraries(${ARG_NAME} ${ARG_LIBRARIES})
+    endif()
+
+    if(ARG_DEPENDENCIES)
+        add_dependencies(${ARG_NAME} ${ARG_DEPENDENCIES})
+    endif()
+
+    catch_discover_tests(${ARG_NAME})
+
+endfunction()

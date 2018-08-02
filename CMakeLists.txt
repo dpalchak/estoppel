@@ -52,11 +52,14 @@ elseif(ESTP_ARCH MATCHES "host")
     estp_add_build_library(host)
     estp_add_build_library(host32 host)
 
+    include(CTest)
+    include("${ESTP_ROOT}/third_party/catch2/upstream/contrib/Catch.cmake")
+    enable_testing()
+
 else()
     message(FATAL_ERROR "Unknown architecture: ${ESTP_ARCH}")
 
 endif()
-
 
 add_subdirectory(third_party)
 add_subdirectory(lib)
