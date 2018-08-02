@@ -1,9 +1,7 @@
 Estoppel TODO list and idea board
 
 ## Punchlist
-- Assertion framework
 - Unit test infrastructure
-- Unit tests for MetaString
 - Unit tests for assertion framework
 - Create blinky app for STM32L4
 - Migrate data structures
