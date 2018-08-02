@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 include(CMakePrintHelpers)
 
-set(ESTOPPEL_ROOT ${CMAKE_SOURCE_DIR})
+set(ESTOPPEL_ROOT ${CMAKE_CURRENT_LIST_DIR})
 set(ESTP_ROOT ${ESTOPPEL_ROOT})
+list(APPEND CMAKE_MODULE_PATH "${ESTP_ROOT}/cmake")
 
 if(NOT DEFINED ESTP_ARCH)
     message(FATAL_ERROR "ESTP_ARCH not defined")
 endif()
 string(TOLOWER ${ESTP_ARCH} ESTP_ARCH)
 
-
 if(ESTP_ARCH MATCHES "arm")
-	set(CMAKE_TOOLCHAIN_FILE "${ESTOPPEL_ROOT}/cmake/EstoppelGccArmEmbedded.cmake")
+	set(CMAKE_TOOLCHAIN_FILE ToolchainGccArmEmbedded)
 endif()
 
 # Don't use CMake's build type control
@@ -21,8 +21,8 @@ unset(CMAKE_BUILD_TYPE)
 project("Estoppel")
 
 # Global project includes
-include("${ESTOPPEL_ROOT}/cmake/EstoppelTools.cmake")
-include("${ESTOPPEL_ROOT}/cmake/EstoppelBuild.cmake")
+include(EstoppelTools)
+include(EstoppelBuild)
 
 # Add all of the build libraries supported by the toolchain we're using
 # The build libraries set the necessary compiler and linker flags for every target
