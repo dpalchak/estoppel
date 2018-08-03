@@ -396,6 +396,6 @@ function(estp_add_test_executable)
         add_dependencies(${ARG_NAME} ${ARG_DEPENDENCIES})
     endif()
 
-    catch_discover_tests(${ARG_NAME})
+    catch_discover_tests(${ARG_NAME} TEST_PREFIX "[${ARG_ARCH}]...")
 
 endfunction()
