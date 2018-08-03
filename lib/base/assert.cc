@@ -6,6 +6,12 @@ namespace estp {
 
 static AssertionHandler user_assertion_handler{nullptr};
 
+// This is a weak symbol so that it can be replaced at link time
+// if desired
+WEAK void DefaultAssertionHandler(FailedAssertion const &f) {
+	for(;;) {}
+}
+
 AssertionHandler SetAssertionHandler(AssertionHandler handler) {
 	auto old_handler = user_assertion_handler;
 	user_assertion_handler = handler;
@@ -30,11 +36,13 @@ void HandleFailedAssertion(FailedAssertion info) {
 	handling_assertion = true;
 	if (user_assertion_handler) {
 		(*user_assertion_handler)(info);
+	} else {
+		DefaultAssertionHandler(info);
 	}
-	// If we get here there either is no user_assertion_handler set or it returned for some reason
-	// The only safe thing to do is hang
-	for(;;)
-		;
+	// If we get here it's because the assertion handler returned
+	// This typically shouldn't happen (except during unit testing)
+	// So let's assume the best
+	handling_assertion = false;
 }
 
 

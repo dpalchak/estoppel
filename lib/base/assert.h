@@ -38,7 +38,7 @@ void HandleFailedAssertion(FailedAssertion failure);
 #define ASSERT(condition)                                                         \
   do {                                                                            \
     if (!(condition)) {                                                           \
-      ::estp::HandleFailedAssertion({#condition, ASSERT_FILENAME, __LINE__, ""}); \
+      ::estp::HandleFailedAssertion({#condition, ASSERT_FILENAME, __LINE__, nullptr}); \
     }                                                                             \
   } while(false)
 
