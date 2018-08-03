@@ -1,15 +1,26 @@
 
-#TODO(palchak): setup as unit test executable
-foreach(ARCH ${ESTP_ARCHS})
-    estp_add_static_library(
+
+foreach(ARCH ${ESTP_ARCHS})    
+    estp_add_interface_library(
         NAME
-            data_test-${ARCH}
+            data-${ARCH}
+        ARCH
+            ${ARCH}
+        INCLUDE_DIRS
+            ${ESTP_ROOT}/lib
+    )
+endforeach()
+
+foreach(ARCH ${ESTP_HOST_ARCHS})
+    estp_add_test_executable(
+        NAME
+            libdata_test-${ARCH}
         ARCH
             ${ARCH}
         SOURCES
             meta_list_test.cc
             meta_string_test.cc
-        INCLUDE_DIRS PUBLIC
-            ${ESTP_ROOT}/lib
+        LIBRARIES PRIVATE
+            data-${ARCH}
     )
 endforeach()
