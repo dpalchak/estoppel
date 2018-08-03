@@ -1,8 +1,6 @@
 Estoppel TODO list and idea board
 
 ## Punchlist
-- Unit test infrastructure
-- Unit tests for assertion framework
 - Create blinky app for STM32L4
 - Migrate data structures
 - Write test cases for data structures
