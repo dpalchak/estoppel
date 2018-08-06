@@ -9,14 +9,14 @@
 using namespace estp;
 using namespace std;
 
-static FailedAssertion last_assertion{};
+static AssertionContext last_assertion{};
 
-void TestHandler(FailedAssertion const &f) {
+void TestHandler(AssertionContext const &f) {
 	last_assertion = f;
 }
 
 void ClearLastAssertion() {
-	last_assertion = FailedAssertion{};
+	last_assertion = AssertionContext{};
 }
 
 TEST_CASE( "Get and set ASSERT handler", "[assert]" ) {
@@ -33,7 +33,7 @@ TEST_CASE( "Get and set ASSERT handler", "[assert]" ) {
         REQUIRE(&TestHandler == GetAssertionHandler());
     }
 
-    SECTION( "Set handler to nulltpr" ) {
+    SECTION( "Set handler to nothing" ) {
         auto h = SetAssertionHandler(nullptr);
         REQUIRE(&TestHandler == h);
         REQUIRE(nullptr == GetAssertionHandler());
@@ -46,31 +46,32 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 	SetAssertionHandler(TestHandler);
 
 	REQUIRE(0 == last_assertion.line);
-	REQUIRE(nullptr == last_assertion.context);
 	REQUIRE('\0' == last_assertion.filename[0]);
 
 	SECTION( "Call ASSERT" ) {
 		int line = __LINE__;
 		ASSERT(false);
 
-		REQUIRE(string{last_assertion.filename} == "assert_test.cc");
+		REQUIRE(string(last_assertion.condition) == "false");
+		REQUIRE(string(last_assertion.filename) == "assert_test.cc");
 		REQUIRE(line+1 == last_assertion.line);
-		REQUIRE(nullptr == last_assertion.context);
 	}
 
 	SECTION( "Call ASSERT again" ) {
 		int line = __LINE__;
-		ASSERT(false);
+		ASSERT(0 == 1);
 
-		REQUIRE(string{last_assertion.filename} == "assert_test.cc");
+		REQUIRE(string(last_assertion.condition) == "0 == 1");
+		REQUIRE(string(last_assertion.filename) == "assert_test.cc");
 		REQUIRE(line+1 == last_assertion.line);
-		REQUIRE(nullptr == last_assertion.context);
 	}
 
-	SECTION( "Call ASSERT_LOG" ) {
-		char const *log_message = "BOOM! goes the dynamite";
-		ASSERT_LOG(false, log_message);
+	SECTION( "Call ASSERT with commas" ) {
+		int line = __LINE__;
+		ASSERT(((void)3,4) == 2);
 
-		REQUIRE(log_message == last_assertion.context);
+		REQUIRE(string(last_assertion.condition) == "((void)3,4) == 2");
+		REQUIRE(string(last_assertion.filename) == "assert_test.cc");
+		REQUIRE(line+1 == last_assertion.line);
 	}
 }

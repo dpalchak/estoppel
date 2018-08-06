@@ -8,7 +8,7 @@ static AssertionHandler user_assertion_handler{nullptr};
 
 // This is a weak symbol so that it can be replaced at link time
 // if desired
-WEAK void DefaultAssertionHandler(FailedAssertion const &f) {
+WEAK void DefaultAssertionHandler(AssertionContext const &) {
 	for(;;) {}
 }
 
@@ -23,7 +23,7 @@ AssertionHandler GetAssertionHandler() {
 }
 
 // Calls the configured assert handler callback.
-void HandleFailedAssertion(FailedAssertion info) {
+void HandleFailedAssertion(AssertionContext const info) {
 	// We use this flag to catch assertion failures that may occur while executing the
 	// user-installed insertion handler
 	static bool handling_assertion = false;
