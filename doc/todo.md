@@ -43,6 +43,7 @@ Estoppel TODO list and idea board
 - Consider user-defined literals for units
 - Change framework configuration scheme
 - Change "app" concept
+- Use structs for strong types
 
 ## BVBE Missing Features
 - Event framework
@@ -227,20 +228,11 @@ Used for CHECK() macro
 ### Cevelop IDE
 <https://www.cevelop.com/>
 
-### Mockator Test Double framework
-<http://www.mockator.com/>
-
-* Also has Eclipse plugin for automatically creating test doubles
-* Works well with Cevelop
-
 ### Open source libraries
 [Facebook Folly](https://github.com/facebook/folly/blob/master/folly/docs/Overview.md)
 - Packed pointers
 
 [Google Abseil](https://abseil.io/about/intro)
-
-### Compile-time basename function for file names
-<https://blog.galowicz.de/2016/02/20/short_file_macro/>
 
 
 ## References
@@ -253,19 +245,4 @@ Used for CHECK() macro
 - folly::Function alternative to std::Function
 - Concepts-like TMP library for constraints
 
-
-# Completed
-### Compilation optimizations
-<https://bitbashing.io/embedded-cpp.html>
-
-- -fnoexpections
-- -fno-non-call-exceptions
-- -fno-rtti
-- -fno-use-cxa-atexit
-- -ffreestanding
-- -fstack-protector-*
-- -fno-common
-- -fno-threadsafe-statics
-- -finline-small-functions
-- -findirect-inlining
 
