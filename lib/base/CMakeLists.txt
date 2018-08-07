@@ -20,6 +20,7 @@ foreach(ARCH ${ESTP_HOST_ARCHS})
             ${ARCH}
         SOURCES
             assert_test.cc
+            bits_test.cc
         LIBRARIES PRIVATE
             base-${ARCH}
     )
