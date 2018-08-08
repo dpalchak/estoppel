@@ -6,10 +6,13 @@
 
 namespace estp {
 
-using size_t = std::size_t;
+// Use signed values for sizes and indices
+// Undefined overflow/underflow behavior can be eliminated using  the
+// '-fwrapv' flag with GCC/Clang
+using Index = std::ptrdiff_t;
 
 // A convenience typedef for readability
-template<std::size_t N>
+template<Index N>
 using StringLiteral = char const (&)[N];
 
 // Readability types for 'zero' (aka null) terminated strings
@@ -22,6 +25,11 @@ using CZString = char const *;
 // Named types are useful for improving call site readability and
 // differentiating function overloads. These are simple types that support
 // aggregate initialization.
+
+template<typename Name>
+struct NamedIndex {
+	Index as_index;
+};
 
 template<typename Name>
 struct NamedInt8 {

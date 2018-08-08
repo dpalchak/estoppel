@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base/meta.h"
+#include "base/types.h"
 
 namespace estp {
 
@@ -13,26 +14,17 @@ template<typename T>
 using MetaListItem = Type<T>;
 
 ////////////////////////////////////////////////////////////
-// Length (Size)
+// Length (Index)
 template<typename... TL>
-constexpr size_t Length(MetaList<TL...>) {
-	return sizeof...(TL);
-}
-
-template<typename... TL>
-constexpr size_t Size(MetaList<TL...>) {
+constexpr Index Length(MetaList<TL...>) {
 	return sizeof...(TL);
 }
 
 ////////////////////////////////////////////////////////////
 // Indexing
-template<size_t N>
-constexpr auto GetT(EmptyMetaList) {
-	static_assert(False<SizeT<N>>::value, "Index out of range");
-}
-
-template<size_t N, typename First, typename... Rest>
+template<Index N, typename First, typename... Rest>
 constexpr auto Get(MetaList<First, Rest...>) {
+	static_assert(N >= 0, "Index out of range");
 	static_assert(N < (1+sizeof...(Rest)), "Index out of range");
 	if constexpr(0 == N) {
 		return First{};
@@ -41,34 +33,41 @@ constexpr auto Get(MetaList<First, Rest...>) {
 	}
 }
 
-template<typename... Items>
+template<Index N>
+constexpr auto GetT(EmptyMetaList) {
+	static_assert(N >= 0, "Index out of range");
+	static_assert(False<IndexConstant<N>>::value, "Index out of range");
+}
+
+template<Index N, typename... Items>
 constexpr auto GetT(MetaList<Items...>) {
-	return Type<decltype(Get(MetaList<Items...>{}))>{};
+	static_assert(N >= 0, "Index out of range");
+	return Type<decltype(Get<N>(MetaList<Items...>{}))>{};
 }
 
 // Reverse Get
 // Indexes from end of list
-template<size_t N, typename... TL>
+template<Index N, typename... TL>
 constexpr auto RGet(MetaList<TL...>) {
+	static_assert(N >= 0, "Index out of range");
 	static_assert(N < sizeof...(TL), "Index out of range");
 	return Get<sizeof...(TL)-N-1>(MetaList<TL...>{});
 }
 
-
-template<typename... Items>
+template<Index N, typename... Items>
 constexpr auto RGetT(MetaList<Items...>) {
-	return Type<decltype(RGet(MetaList<Items...>{}))>{};
+	return Type<decltype(RGet<N>(MetaList<Items...>{}))>{};
 }
 
 ////////////////////////////////////////////////////////////
 // First N
-template<size_t N, typename... Head>
+template<Index N, typename... Head>
 constexpr auto _First(MetaList<Head...>, EmptyMetaList) {
 	static_assert(sizeof...(Head) <= N, "Invalid argument");
 	return MetaList<Head...>{};
 }
 
-template<size_t N, typename... Head, typename Body, typename... Tail>
+template<Index N, typename... Head, typename Body, typename... Tail>
 constexpr auto _First(MetaList<Head...>, MetaList<Body, Tail...>) {
 	if constexpr(sizeof...(Head) < N) {
 		return _First<N>(MetaList<Head..., Body>{}, MetaList<Tail...>{});
@@ -77,19 +76,20 @@ constexpr auto _First(MetaList<Head...>, MetaList<Body, Tail...>) {
 	}
 }
 
-template<size_t N, typename... TL>
+template<Index N, typename... TL>
 constexpr auto First(MetaList<TL...>) {
+	static_assert(N >= 0, "Index out of range");
 	return _First<N>(EmptyMetaList{}, MetaList<TL...>{});
 }
 
 ////////////////////////////////////////////////////////////
 // Last N
-template<size_t N, typename... Head>
+template<Index N, typename... Head>
 constexpr auto _Last(MetaList<Head...>, EmptyMetaList) {
 	return EmptyMetaList{};
 }
 
-template<size_t N, typename... Head, typename Body, typename... Tail>
+template<Index N, typename... Head, typename Body, typename... Tail>
 constexpr auto _Last(MetaList<Head...>, MetaList<Body, Tail...>) {
 	if constexpr(1+sizeof...(Tail) > N) {
 		return _Last<N>(MetaList<Head..., Body>{}, MetaList<Tail...>{});
@@ -98,8 +98,9 @@ constexpr auto _Last(MetaList<Head...>, MetaList<Body, Tail...>) {
 	}
 }
 
-template<size_t N, typename... TL>
+template<Index N, typename... TL>
 constexpr auto Last(MetaList<TL...>) {
+	static_assert(N >= 0, "Index out of range");
 	return _Last<N>(EmptyMetaList{}, MetaList<TL...>{});
 }
 

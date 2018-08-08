@@ -10,18 +10,18 @@
 using namespace estp;
 
 
-using A = Char<'A'>;
-using B = Char<'B'>;
-using C = Char<'C'>;
-using D = Char<'D'>;
-using E = Char<'E'>;
+using A = CharConstant<'A'>;
+using B = CharConstant<'B'>;
+using C = CharConstant<'C'>;
+using D = CharConstant<'D'>;
+using E = CharConstant<'E'>;
 using Letters = MetaList<A,B,C,D,E>;
 
-using Zero = Int<0>;
-using One = Int<1>;
-using Two = Int<2>;
-using Three = Int<3>;
-using Four = Int<4>;
+using Zero = IntConstant<0>;
+using One = IntConstant<1>;
+using Two = IntConstant<2>;
+using Three = IntConstant<3>;
+using Four = IntConstant<4>;
 using Numbers = MetaList<Zero, One, Two, Three, Four>;
 
 using Zipped = MetaList<A, Zero, B, One, C, Two, D, Three, E, Four >;

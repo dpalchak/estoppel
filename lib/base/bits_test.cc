@@ -112,7 +112,7 @@ TEST_CASE( "Create 32-bit masks", "[bits]" ) {
 TEST_CASE( "Count trailing zeros (unsigned char)", "[bits]" ) {
 	REQUIRE( -1 == ctz(static_cast<unsigned char>(0)) );
 
-	for(unsigned i=0; i<8; ++i) {
+	for(Index i=0; i<8; ++i) {
 		REQUIRE( i == ctz(static_cast<unsigned char>(1U<<i)) );
 	}
 }
@@ -120,7 +120,7 @@ TEST_CASE( "Count trailing zeros (unsigned char)", "[bits]" ) {
 TEST_CASE( "Count trailing zeros (unsigned short)", "[bits]" ) {
 	REQUIRE( -1 == ctz(static_cast<unsigned short>(0)) );
 
-	for(unsigned i=0; i<16; ++i) {
+	for(Index i=0; i<16; ++i) {
 		REQUIRE( i == ctz(static_cast<unsigned short>(1U<<i)) );
 	}
 }
@@ -128,7 +128,7 @@ TEST_CASE( "Count trailing zeros (unsigned short)", "[bits]" ) {
 TEST_CASE( "Count trailing zeros (unsigned int)", "[bits]" ) {
 	REQUIRE( -1 == ctz(static_cast<unsigned int>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned int>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned int>(); ++i) {
 		REQUIRE( i == ctz(static_cast<unsigned int>(1U<<i)) );
 	}
 }
@@ -136,7 +136,7 @@ TEST_CASE( "Count trailing zeros (unsigned int)", "[bits]" ) {
 TEST_CASE( "Count trailing zeros (unsigned long)", "[bits]" ) {
 	REQUIRE( -1 == ctz(static_cast<unsigned long>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned long>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned long>(); ++i) {
 		REQUIRE( i == ctz(static_cast<unsigned long>(1UL<<i)) );
 	}
 }
@@ -144,7 +144,7 @@ TEST_CASE( "Count trailing zeros (unsigned long)", "[bits]" ) {
 TEST_CASE( "Count trailing zeros (unsigned long long)", "[bits]" ) {
 	REQUIRE( -1 == ctz(static_cast<unsigned long long>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned long long>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned long long>(); ++i) {
 		REQUIRE( i == ctz(static_cast<unsigned long long>(1ULL<<i)) );
 	}
 }
@@ -152,7 +152,7 @@ TEST_CASE( "Count trailing zeros (unsigned long long)", "[bits]" ) {
 TEST_CASE( "Count leading zeros (unsigned char)", "[bits]" ) {
 	REQUIRE( -1 == clz(static_cast<unsigned char>(0)) );
 
-	for(unsigned i=0; i<8; ++i) {
+	for(Index i=0; i<8; ++i) {
 		REQUIRE( (8 - i - 1) == clz(static_cast<unsigned char>(1U<<i)) );
 	}
 }
@@ -160,7 +160,7 @@ TEST_CASE( "Count leading zeros (unsigned char)", "[bits]" ) {
 TEST_CASE( "Count leading zeros (unsigned short)", "[bits]" ) {
 	REQUIRE( -1 == clz(static_cast<unsigned short>(0)) );
 
-	for(unsigned i=0; i<16; ++i) {
+	for(Index i=0; i<16; ++i) {
 		REQUIRE( (16 - i - 1) == clz(static_cast<unsigned short>(1U<<i)) );
 	}
 }
@@ -168,7 +168,7 @@ TEST_CASE( "Count leading zeros (unsigned short)", "[bits]" ) {
 TEST_CASE( "Count leading zeros (unsigned int)", "[bits]" ) {
 	REQUIRE( -1 == clz(static_cast<unsigned int>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned int>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned int>(); ++i) {
 		REQUIRE( (bitsize<unsigned int>() - i - 1) ==
 				clz(static_cast<unsigned int>(1U<<i)) );
 	}
@@ -177,7 +177,7 @@ TEST_CASE( "Count leading zeros (unsigned int)", "[bits]" ) {
 TEST_CASE( "Count leading zeros (unsigned long)", "[bits]" ) {
 	REQUIRE( -1 == clz(static_cast<unsigned long>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned long>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned long>(); ++i) {
 		REQUIRE( (bitsize<unsigned long>() - i - 1) ==
 				clz(static_cast<unsigned long>(1UL<<i)) );
 	}
@@ -186,7 +186,7 @@ TEST_CASE( "Count leading zeros (unsigned long)", "[bits]" ) {
 TEST_CASE( "Count leading zeros (unsigned long long)", "[bits]" ) {
 	REQUIRE( -1 == clz(static_cast<unsigned long long>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned long long>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned long long>(); ++i) {
 		REQUIRE( (bitsize<unsigned long long>() - i - 1) ==
 				clz(static_cast<unsigned long long>(1ULL<<i)) );
 	}
@@ -195,7 +195,7 @@ TEST_CASE( "Count leading zeros (unsigned long long)", "[bits]" ) {
 TEST_CASE( "FindMsb (unsigned char)", "[bits]" ) {
 	REQUIRE( -1 == FindMsb(static_cast<unsigned char>(0)) );
 
-	for(unsigned i=0; i<8; ++i) {
+	for(Index i=0; i<8; ++i) {
 		REQUIRE( i == FindMsb(static_cast<unsigned char>(1U<<i)) );
 	}
 }
@@ -203,7 +203,7 @@ TEST_CASE( "FindMsb (unsigned char)", "[bits]" ) {
 TEST_CASE( "FindMsb (unsigned short)", "[bits]" ) {
 	REQUIRE( -1 == FindMsb(static_cast<unsigned short>(0)) );
 
-	for(unsigned i=0; i<16; ++i) {
+	for(Index i=0; i<16; ++i) {
 		REQUIRE( i == FindMsb(static_cast<unsigned short>(1U<<i)) );
 	}
 }
@@ -211,7 +211,7 @@ TEST_CASE( "FindMsb (unsigned short)", "[bits]" ) {
 TEST_CASE( "FindMsb (unsigned int)", "[bits]" ) {
 	REQUIRE( -1 == FindMsb(static_cast<unsigned int>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned int>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned int>(); ++i) {
 		REQUIRE( i == FindMsb(static_cast<unsigned int>(1U<<i)) );
 	}
 }
@@ -219,7 +219,7 @@ TEST_CASE( "FindMsb (unsigned int)", "[bits]" ) {
 TEST_CASE( "FindMsb (unsigned long)", "[bits]" ) {
 	REQUIRE( -1 == FindMsb(static_cast<unsigned long>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned long>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned long>(); ++i) {
 		REQUIRE( i == FindMsb(static_cast<unsigned long>(1UL<<i)) );
 	}
 }
@@ -227,7 +227,7 @@ TEST_CASE( "FindMsb (unsigned long)", "[bits]" ) {
 TEST_CASE( "FindMsb (unsigned long long)", "[bits]" ) {
 	REQUIRE( -1 == FindMsb(static_cast<unsigned long long>(0)) );
 
-	for(unsigned i=0; i<bitsize<unsigned long long>(); ++i) {
+	for(Index i=0; i<bitsize<unsigned long long>(); ++i) {
 		REQUIRE( i == FindMsb(static_cast<unsigned long long>(1ULL<<i)) );
 	}
 }

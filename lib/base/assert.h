@@ -9,7 +9,7 @@ namespace estp {
 struct AssertionContext {
 	CZString condition = "";
 	CZString filename = "";
-	unsigned line = 0;
+	Index line = 0;
 };
 
 // Assertion handler

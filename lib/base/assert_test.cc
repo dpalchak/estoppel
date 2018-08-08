@@ -49,7 +49,7 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 	REQUIRE('\0' == last_assertion.filename[0]);
 
 	SECTION( "Call ASSERT" ) {
-		int line = __LINE__;
+		Index line = __LINE__;
 		ASSERT(false);
 
 		REQUIRE(string(last_assertion.condition) == "false");
@@ -58,7 +58,7 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 	}
 
 	SECTION( "Call ASSERT again" ) {
-		int line = __LINE__;
+		Index line = __LINE__;
 		ASSERT(0 == 1);
 
 		REQUIRE(string(last_assertion.condition) == "0 == 1");
@@ -67,7 +67,7 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 	}
 
 	SECTION( "Call ASSERT with commas" ) {
-		int line = __LINE__;
+		Index line = __LINE__;
 		ASSERT(((void)3,4) == 2);
 
 		REQUIRE(string(last_assertion.condition) == "((void)3,4) == 2");

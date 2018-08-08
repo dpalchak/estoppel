@@ -10,7 +10,7 @@ namespace estp {
 
 template<char... Chars>
 struct MetaString  {
-    constexpr static std::size_t length {sizeof...(Chars)};
+    constexpr static Index length {sizeof...(Chars)};
 
     // Include an implicit null terminator for compatibility with normal string-handling functions
     constexpr static char const value[sizeof...(Chars)+1] { Chars..., '\0'};
@@ -33,7 +33,7 @@ constexpr char const MetaString<C...>::value[sizeof...(C)+1];
 
 template<>
 struct MetaString<> {
-    constexpr static std::size_t length {0};
+    constexpr static Index length {0};
 
     // Include an implicit null terminator for compatibility with normal string-handling functions
     constexpr static char const value[] {'\0'};
@@ -66,11 +66,12 @@ namespace _metastring {
 
 struct StringLiteralTooLong {};
 
-// Return the element at the specified index,
-// or null if the index is out of range
-template<size_t N, size_t M>
-constexpr char GetCharOrNull(StringLiteral<M> str) {
-	return str[(N < M) ? N : M-1];
+// Return the element at the specified index, or the element at index N-1 if
+// the specified index is larger than the size of the StringLiteral
+template<Index I, Index N>
+constexpr char SaturatingGet(StringLiteral<N> str) {
+	static_assert(I >= 0, "Index out of range");
+	return str[(I < N) ? I : N-1];
 }
 
 // Used to check MetaString length
@@ -85,7 +86,7 @@ constexpr auto CheckMetaStringMaxLen(MetaString<Chars...>) {
 	}
 }
 
-template<size_t N, char First, char... Rest>
+template<Index N, char First, char... Rest>
 constexpr char _Get(MetaString<First>, MetaString<Rest>...) {
 	if constexpr(0 == N) {
 		return First;
@@ -94,13 +95,13 @@ constexpr char _Get(MetaString<First>, MetaString<Rest>...) {
 	}
 }
 
-template<size_t N, char... Head>
+template<Index N, char... Head>
 constexpr auto _First(MetaString<Head...>, NullMetaString) {
 	static_assert(sizeof...(Head) <= N);
 	return MetaString<Head...>{};
 }
 
-template<size_t N, char... Head, char Next, char... Rest>
+template<Index N, char... Head, char Next, char... Rest>
 constexpr auto _First(MetaString<Head...>, MetaString<Next, Rest...>) {
 	if constexpr(sizeof...(Head) < N) {
 		return _First<N>(MetaString<Head..., Next>{}, MetaString<Rest...>{});
@@ -109,12 +110,12 @@ constexpr auto _First(MetaString<Head...>, MetaString<Next, Rest...>) {
 	}
 }
 
-template<size_t N, char... Head>
+template<Index N, char... Head>
 constexpr auto _Last(MetaString<Head...>, NullMetaString) {
 	return NullMetaString{};
 }
 
-template<size_t N, char... Head, char Next, char... Rest>
+template<Index N, char... Head, char Next, char... Rest>
 constexpr auto _Last(MetaString<Head...>, MetaString<Next, Rest...>) {
 	if constexpr(1+sizeof...(Rest) > N) {
 		return _Last<N>(MetaString<Head..., Next>{}, MetaString<Rest...>{});
@@ -163,34 +164,38 @@ constexpr auto _Split(MetaString<First, Rest...>, MetaString<Buf...>, MetaList<P
 
 } // namespace _metastring
 
-template<size_t N, char... Chars>
+template<Index N, char... Chars>
 constexpr char Get(MetaString<Chars...>) {
+	static_assert(N >= 0, "Index out of range");
 	static_assert(N < sizeof...(Chars), "Index out of range");
 	return _metastring::_Get<N>(MetaString<Chars>{}...);
 }
 
-template<size_t N, char... Chars>
+template<Index N, char... Chars>
 constexpr char RGet(MetaString<Chars...>) {
+	static_assert(N >= 0, "Index out of range");
 	static_assert(N < sizeof...(Chars), "Index out of range");
 	return _metastring::_Get<sizeof...(Chars)-N-1>(MetaString<Chars>{}...);
 }
 
 // Return the first N characters as a MetaString
-template<size_t N, char... Chars>
+template<Index N, char... Chars>
 constexpr auto First(MetaString<Chars...>) {
+	static_assert(N >= 0, "Index out of range");
 	return _metastring::_First<N>(NullMetaString{}, MetaString<Chars...>{});
 }
 
 // Return the last N characters in a MetaString
-template<size_t N, char... Chars>
+template<Index N, char... Chars>
 constexpr auto Last(MetaString<Chars...>) {
+	static_assert(N >= 0, "Index out of range");
 	return _metastring::_Last<N>(NullMetaString{}, MetaString<Chars...>{});
 }
 
 // Return the substring between indices [Start, End)
-template<size_t Start, size_t End, char... Chars>
+template<Index Start, Index End, char... Chars>
 constexpr auto Substring(MetaString<Chars...>) {
-	static_assert(Start <= End, "Invalid start index");
+	static_assert((0 <= Start) && (Start <= End), "Invalid start index");
 	static_assert(End <= sizeof...(Chars), "Invalid end index");
 	return First<End-Start>(Last<sizeof...(Chars)-Start>(MetaString<Chars...>{}));
 }
@@ -291,11 +296,11 @@ constexpr bool operator!=(MetaString<LHS...>, MetaString<RHS...>) {
 
 
 // Now we use to pre-processing hacks to generate long lists
-// of calls to GetCharOrNull. These tokens get concatenated and placed in the
+// of calls to SaturatingGet. These tokens get concatenated and placed in the
 // template parameter list of a MetaString class declaration
 
 #define METASTRING_GET_CHAR_AT(_index, _literal) \
-	::estp::_metastring::GetCharOrNull<_index>(_literal)
+	::estp::_metastring::SaturatingGet<_index>(_literal)
 
 #define METASTRING_GET_16_CHARS_AT(_base, _literal) \
     METASTRING_GET_CHAR_AT(_base+ 0, _literal), \

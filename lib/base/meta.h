@@ -175,43 +175,40 @@ using MethodPointer = typename MethodTraits<SIG,C>::PointerType;
 using Void = Type<void>;
 
 template<char V>
-struct Char : public std::integral_constant<char, V> {};
+struct CharConstant : public std::integral_constant<char, V> {};
 
 template<int V>
-struct Int : public std::integral_constant<int, V> {};
+struct IntConstant : public std::integral_constant<int, V> {};
 
 template<unsigned V>
-struct Unsigned : public std::integral_constant<unsigned, V> {};
+struct UnsignedConstant : public std::integral_constant<unsigned, V> {};
 
-template<std::size_t V>
-struct SizeT : public std::integral_constant<std::size_t, V> {};
-
-template<std::size_t V>
-using IndexT = SizeT<V>;
+template<Index V>
+struct IndexConstant : public std::integral_constant<Index, V> {};
 
 template<std::uint8_t V>
-struct Uint8 : public std::integral_constant<std::uint8_t, V> {};
+struct Uint8Constant : public std::integral_constant<std::uint8_t, V> {};
 
 template<std::uint16_t V>
-struct Uint16 : public std::integral_constant<std::uint16_t, V> {};
+struct Uint16Constant : public std::integral_constant<std::uint16_t, V> {};
 
 template<std::uint32_t V>
-struct Uint32 : public std::integral_constant<std::uint32_t, V> {};
+struct Uint32Constant : public std::integral_constant<std::uint32_t, V> {};
 
 template<std::uint64_t V>
-struct Uint64 : public std::integral_constant<std::uint64_t, V> {};
+struct Uint64Constant : public std::integral_constant<std::uint64_t, V> {};
 
 template<std::int8_t V>
-struct Int8 : public std::integral_constant<std::int8_t, V> {};
+struct Int8Constant : public std::integral_constant<std::int8_t, V> {};
 
 template<std::int16_t V>
-struct Int16 : public std::integral_constant<std::int16_t, V> {};
+struct Int16Constant : public std::integral_constant<std::int16_t, V> {};
 
 template<std::int32_t V>
-struct Int32 : public std::integral_constant<std::int32_t, V> {};
+struct Int32Constant : public std::integral_constant<std::int32_t, V> {};
 
 template<std::int64_t V>
-struct Int64 : public std::integral_constant<std::int64_t, V> {};
+struct Int64Constant : public std::integral_constant<std::int64_t, V> {};
 
 // Useful functions for working with index sequences
 template <std::size_t Offset, std::size_t ... Indices>
