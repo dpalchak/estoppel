@@ -3,6 +3,7 @@
 #include "base/types.h"
 
 #include <cstdint>
+#include <iterator>
 #include <type_traits>
 #include <utility>
 
@@ -42,6 +43,9 @@ using Identity = Invoke<Type<T>>;
 template<typename T>
 using Decay = Invoke<::std::decay<T>>;
 
+template<typename...>
+using Void = void;
+
 // Lazy bool type, useful for postponing evaluation of a compile-time expression
 template<bool B, typename...>
 struct LazyBool : public std::integral_constant<bool, B> {};
@@ -59,7 +63,7 @@ template<typename T>
 using Not = Bool<!GetValue<T>()>;
 
 template<typename If, typename Then, typename Else>
-using Conditional = Invoke<::std::conditional<GetValue<If>(),Then,Else> >;
+using Conditional = Invoke<::std::conditional<If::value,Then,Else> >;
 
 // Meta-logical Or
 template<typename... T>
@@ -75,11 +79,10 @@ struct And : public True<> {};
 template<typename Head, typename... Tail>
 struct And<Head, Tail...> : public Conditional<Head, And<Tail...>, False<> > {};
 
-// Strips all reference and cv qualifiers from a type
-template<typename T>
-using Unqualified = Invoke< std::remove_reference< Invoke<::std::remove_cv<T> > > >;
-
 // Standard Library Type Traits as LazyBools
+template<typename T>
+using IsConst = Bool<::std::is_const<T>::value, T>;
+
 template<typename T>
 using IsIntegral = Bool<::std::is_integral<T>::value, T>;
 
@@ -110,6 +113,21 @@ using IsLvalue = Bool<::std::is_lvalue_reference<T&>::value, T>;
 template<typename T, typename S>
 using IsSame = Bool<::std::is_same<T,S>::value, T, S>;
 
+template<typename T, typename S>
+using IsConvertible = Bool<::std::is_convertible<T,S>::value, T, S>;
+
+template<typename T, typename = Void<> >
+struct HasSize : False<T> {};
+
+template<typename T>
+struct HasSize<T, Void< decltype(std::size(std::declval<T>())) > > : True<T> {};
+
+template<typename T, typename = Void<> >
+struct HasData : False<T> {};
+
+template<typename T>
+struct HasData<T, Void< decltype(std::data(std::declval<T>())) > > : True<T> {};
+
 // Control flow
 template<typename If, typename Then=void>
 using EnableIf = Invoke<::std::enable_if<If::value,Then> >;
@@ -120,8 +138,26 @@ using EnableIfSame = EnableIf< IsSame<Decay<T>, Decay<C>> >;
 template<typename T, typename C>
 using EnableIfDifferent = EnableIf< Not< IsSame<Decay<T>, Decay<C>> > >;
 
-template<typename From, typename To>
-using IsConvertible = Bool<GetValue<::std::is_convertible<From,To>>(), From, To>;
+// Traits
+
+// Strips all reference and cv qualifiers from a type
+template<typename T>
+using Unqualified = Invoke< std::remove_reference< Invoke<::std::remove_cv<T> > > >;
+
+template<typename T>
+using AddConst = Invoke< std::add_const<T> >;
+
+template<typename T>
+using RemoveConst = Invoke< std::remove_const<T> >;
+
+template<typename T>
+using AddPointer = Invoke< ::std::add_pointer<T> >;
+
+template<typename T>
+using RemovePointer = Invoke< ::std::remove_pointer<T> >;
+
+template<typename C>
+using ContainerElementType = RemovePointer<decltype(std::data(std::declval<C>()))>;
 
 template<typename T>
 struct FunctionTraits;
@@ -136,7 +172,6 @@ struct FunctionTraits<R(A...)> {
 
 template<typename SIG>
 using FunctionPointer = typename FunctionTraits<SIG>::PointerType;
-
 
 template<typename T, typename C=void>
 struct MethodTraits;
@@ -172,8 +207,6 @@ template<typename SIG, typename C=void>
 using MethodPointer = typename MethodTraits<SIG,C>::PointerType;
 
 // Shortcuts for integral constants and native types
-using Void = Type<void>;
-
 template<char V>
 struct CharConstant : public std::integral_constant<char, V> {};
 
