@@ -22,6 +22,7 @@ foreach(ARCH ${ESTP_HOST_ARCHS})
             meta_list_test.cc
             meta_string_test.cc
             not_null_test.cc
+            span_test.cc
         LIBRARIES PRIVATE
             base-${ARCH}
             data-${ARCH}

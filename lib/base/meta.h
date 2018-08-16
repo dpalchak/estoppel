@@ -156,8 +156,8 @@ using AddPointer = Invoke< ::std::add_pointer<T> >;
 template<typename T>
 using RemovePointer = Invoke< ::std::remove_pointer<T> >;
 
-template<typename C>
-using ContainerElementType = RemovePointer<decltype(std::data(std::declval<C>()))>;
+template<typename T>
+using ElementType = RemovePointer<decltype(std::data(std::declval<T>()))>;
 
 template<typename T>
 struct FunctionTraits;
