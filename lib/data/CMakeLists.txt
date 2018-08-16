@@ -18,10 +18,12 @@ foreach(ARCH ${ESTP_HOST_ARCHS})
         ARCH
             ${ARCH}
         SOURCES
+            final_action_test.cc
             meta_list_test.cc
             meta_string_test.cc
-            final_action_test.cc
+            not_null_test.cc
         LIBRARIES PRIVATE
+            base-${ARCH}
             data-${ARCH}
     )
 endforeach()
