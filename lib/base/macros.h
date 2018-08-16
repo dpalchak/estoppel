@@ -1,24 +1,18 @@
 #pragma once
 
 // Prevents compiler from creating default copy constructor/assignment operator
-#define DISALLOW_COPYING(type_name) \
+#define DISABLE_COPY(type_name) \
   type_name(type_name const&) = delete; \
   type_name& operator=(type_name const&) = delete;
 
 // Prevents compiler from creating default move constructor/assignment operator
-#define DISALLOW_MOVING(type_name) \
+#define DISABLE_MOVE(type_name) \
   type_name(type_name const&&) = delete; \
   type_name& operator=(type_name&&) = delete;
 
 // Prevents compiler from creating default constructor
-#define DISALLOW_CONSTRUCTION(type_name) \
+#define DISABLE_CONSTRUCTION(type_name) \
     type_name() = delete;
-
-// Prevents heap allocation
-#define DISALLOW_DYNAMIC_ALLOCATION(type_name) \
-    private:\
-    static void* operator new (std::size_t); \
-    static void* operator new (std::size_t, void*);
 
 // Add quotes to a string containing a macro
 // Allows for macro expansion within a string:
