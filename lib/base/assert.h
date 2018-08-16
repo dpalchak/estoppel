@@ -25,14 +25,17 @@ void HandleFailedAssertion(AssertionContext failure);
 #define FILE_NAME __FILE__
 #endif
 
-#ifndef ESTP_ASSERT_FULL_NAME
-#define ESTP_ASSERT_FULL_NAME 0
+#ifdef ESTOPPEL
+#ifndef ESTP_ASSERT_BASE_NAME
+#define ESTP_ASSERT_BASE_NAME 1
+#endif
 #endif
 
-#if ESTP_ASSERT_FULL_NAME
-#  define ASSERT_FILENAME FILE_NAME
-#else
+
+#if ESTP_ASSERT_BASE_NAME
 #  define ASSERT_FILENAME ::estp::RGet<0>(::estp::Split<'/'>(MAKE_METASTRING_256(FILE_NAME)))
+#else
+#  define ASSERT_FILENAME FILE_NAME
 #endif
 
 #define ASSERT(...)                                                                   \
