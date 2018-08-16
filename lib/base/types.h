@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <climits>
+#include <type_traits>
 
 namespace estp {
 
@@ -19,7 +20,6 @@ using StringLiteral = char const (&)[N];
 // These are borrowed from the C++ Guideline Support Library (GSL)
 using ZString = char *;
 using CZString = char const *;
-
 
 // Template classes for creating named types
 // Named types are useful for improving call site readability and
@@ -95,6 +95,10 @@ template<typename Name>
 struct NamedBool {
 	bool as_bool;
 };
+
+// We don't use our own IsPointer here to avoid circular dependency in the header files
+template<typename T, typename = typename std::enable_if< std::is_pointer<T>::value >::type >
+using Owner = T;
 
 
 } // namespace estp
