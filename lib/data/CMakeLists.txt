@@ -1,6 +1,6 @@
 
 
-foreach(ARCH ${ESTP_ARCHS})    
+foreach(ARCH ${ESTP_ARCHS})
     estp_add_interface_library(
         NAME
             data-${ARCH}
@@ -20,6 +20,7 @@ foreach(ARCH ${ESTP_HOST_ARCHS})
         SOURCES
             meta_list_test.cc
             meta_string_test.cc
+            final_action_test.cc
         LIBRARIES PRIVATE
             data-${ARCH}
     )
