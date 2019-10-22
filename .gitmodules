@@ -4,3 +4,6 @@
 [submodule "catch2"]
 	path = third_party/catch2/upstream
 	url = https://github.com/catchorg/Catch2
+[submodule "third_party/gcc-arm-none-eabi"]
+	path = third_party/gcc-arm-none-eabi
+	url = https://gitlab.com/dpalchak/gcc-arm-none-eabi
