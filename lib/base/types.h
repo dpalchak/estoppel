@@ -14,7 +14,7 @@ using Index = std::ptrdiff_t;
 
 // A convenience typedef for readability
 template<Index N>
-using StringLiteral = char const (&)[N];
+using StringLiteral = char const (&)[static_cast<std::size_t>(N)];
 
 // Readability types for 'zero' (aka null) terminated strings
 // These are borrowed from the C++ Guideline Support Library (GSL)
