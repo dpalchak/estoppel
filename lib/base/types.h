@@ -8,13 +8,13 @@
 namespace estp {
 
 // Use signed values for sizes and indices
-// Undefined overflow/underflow behavior can be eliminated using  the
+// Undefined overflow/underflow behavior can be eliminated using the
 // '-fwrapv' flag with GCC/Clang
 using Index = std::ptrdiff_t;
 
 // A convenience typedef for readability
-template<Index N>
-using StringLiteral = char const (&)[static_cast<std::size_t>(N)];
+template<auto N>
+using StringLiteral = char const (&)[N];
 
 // Readability types for 'zero' (aka null) terminated strings
 // These are borrowed from the C++ Guideline Support Library (GSL)

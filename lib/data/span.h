@@ -50,7 +50,7 @@ public:
 
     constexpr Span(Pointer begin_, Pointer end_) : Span{begin_, end_ - begin_} {}
 
-    template<typename U, Index N>
+    template<typename U, auto N>
     constexpr Span(U (&arr)[N]) : _begin{arr}, _size{N} {}
 
     template<typename U>
@@ -188,10 +188,10 @@ Span(Container&) -> Span<ElementType<Container>>;
 template<typename Container>
 Span(Container const &) -> Span<ElementType<Container> const>;
 
-template<typename T, Index N>
+template<typename T, auto N>
 Span(T(&)[N]) -> Span<T>;
 
-template<typename T, Index N>
+template<typename T, auto N>
 Span(T const (&)[N]) -> Span<T const>;
 
 

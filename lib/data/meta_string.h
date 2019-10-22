@@ -10,7 +10,7 @@ namespace estp {
 
 template<char... Chars>
 struct MetaString  {
-    constexpr static Index length {sizeof...(Chars)};
+    constexpr static auto length {sizeof...(Chars)};
 
     // Include an implicit null terminator for compatibility with normal string-handling functions
     constexpr static char const value[sizeof...(Chars)+1] { Chars..., '\0'};
@@ -33,7 +33,7 @@ constexpr char const MetaString<C...>::value[sizeof...(C)+1];
 
 template<>
 struct MetaString<> {
-    constexpr static Index length {0};
+    constexpr static auto length {0*sizeof(int)};
 
     // Include an implicit null terminator for compatibility with normal string-handling functions
     constexpr static char const value[] {'\0'};
@@ -68,7 +68,7 @@ struct StringLiteralTooLong {};
 
 // Return the element at the specified index, or the element at index N-1 if
 // the specified index is larger than the size of the StringLiteral
-template<Index I, Index N>
+template<auto I, auto N>
 constexpr char SaturatingGet(StringLiteral<N> str) {
 	static_assert(I >= 0, "Index out of range");
 	return str[(I < N) ? I : N-1];
@@ -86,7 +86,7 @@ constexpr auto CheckMetaStringMaxLen(MetaString<Chars...>) {
 	}
 }
 
-template<Index N, char First, char... Rest>
+template<auto N, char First, char... Rest>
 constexpr char _Get(MetaString<First>, MetaString<Rest>...) {
 	if constexpr(0 == N) {
 		return First;
@@ -95,13 +95,13 @@ constexpr char _Get(MetaString<First>, MetaString<Rest>...) {
 	}
 }
 
-template<Index N, char... Head>
+template<auto N, char... Head>
 constexpr auto _First(MetaString<Head...>, NullMetaString) {
 	static_assert(sizeof...(Head) <= N);
 	return MetaString<Head...>{};
 }
 
-template<Index N, char... Head, char Next, char... Rest>
+template<auto N, char... Head, char Next, char... Rest>
 constexpr auto _First(MetaString<Head...>, MetaString<Next, Rest...>) {
 	if constexpr(sizeof...(Head) < N) {
 		return _First<N>(MetaString<Head..., Next>{}, MetaString<Rest...>{});
@@ -110,12 +110,12 @@ constexpr auto _First(MetaString<Head...>, MetaString<Next, Rest...>) {
 	}
 }
 
-template<Index N, char... Head>
+template<auto N, char... Head>
 constexpr auto _Last(MetaString<Head...>, NullMetaString) {
 	return NullMetaString{};
 }
 
-template<Index N, char... Head, char Next, char... Rest>
+template<auto N, char... Head, char Next, char... Rest>
 constexpr auto _Last(MetaString<Head...>, MetaString<Next, Rest...>) {
 	if constexpr(1+sizeof...(Rest) > N) {
 		return _Last<N>(MetaString<Head..., Next>{}, MetaString<Rest...>{});
@@ -164,14 +164,14 @@ constexpr auto _Split(MetaString<First, Rest...>, MetaString<Buf...>, MetaList<P
 
 } // namespace _metastring
 
-template<Index N, char... Chars>
+template<auto N, char... Chars>
 constexpr char Get(MetaString<Chars...>) {
 	static_assert(N >= 0, "Index out of range");
 	static_assert(N < sizeof...(Chars), "Index out of range");
 	return _metastring::_Get<N>(MetaString<Chars>{}...);
 }
 
-template<Index N, char... Chars>
+template<auto N, char... Chars>
 constexpr char RGet(MetaString<Chars...>) {
 	static_assert(N >= 0, "Index out of range");
 	static_assert(N < sizeof...(Chars), "Index out of range");
@@ -179,21 +179,21 @@ constexpr char RGet(MetaString<Chars...>) {
 }
 
 // Return the first N characters as a MetaString
-template<Index N, char... Chars>
+template<auto N, char... Chars>
 constexpr auto First(MetaString<Chars...>) {
 	static_assert(N >= 0, "Index out of range");
 	return _metastring::_First<N>(NullMetaString{}, MetaString<Chars...>{});
 }
 
 // Return the last N characters in a MetaString
-template<Index N, char... Chars>
+template<auto N, char... Chars>
 constexpr auto Last(MetaString<Chars...>) {
 	static_assert(N >= 0, "Index out of range");
 	return _metastring::_Last<N>(NullMetaString{}, MetaString<Chars...>{});
 }
 
 // Return the substring between indices [Start, End)
-template<Index Start, Index End, char... Chars>
+template<auto Start, auto End, char... Chars>
 constexpr auto Substring(MetaString<Chars...>) {
 	static_assert((0 <= Start) && (Start <= End), "Invalid start index");
 	static_assert(End <= sizeof...(Chars), "Invalid end index");
