@@ -11,5 +11,7 @@ estp_add_static_library(
     	vector_table.cc
 	LDFLAGS INTERFACE
        -nostartfiles    # Because we provide our own start-up routines
+    LIBRARIES PUBLIC
+        base-armcm4f
 )
 

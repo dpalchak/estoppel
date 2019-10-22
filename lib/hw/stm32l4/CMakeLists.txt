@@ -24,11 +24,13 @@ estp_add_static_library(
         armcm4f
     SOURCES
         stm32l4xx_vector_table.cc
-    LIBRARIES INTERFACE
-        armcm4f
-        # The order of the scripts here is important
-        "-T${CMAKE_CURRENT_SOURCE_DIR}/stm32l4x6xg_memory.ld"
-        "-T${CMAKE_CURRENT_BINARY_DIR}/stm32l4x6.ld"
+    LIBRARIES
+        PUBLIC
+            armcm4f
+        INTERFACE
+            # The order of the scripts here is important
+            "-T${CMAKE_CURRENT_SOURCE_DIR}/stm32l4x6xg_memory.ld"
+            "-T${CMAKE_CURRENT_BINARY_DIR}/stm32l4x6.ld"
     DEPENDENCIES
         gen_stm32l4x6_link_script
 )
