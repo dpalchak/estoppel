@@ -1,3 +1,0 @@
-
-add_subdirectory(host_sandbox)
-add_subdirectory(cm4f_sandbox)

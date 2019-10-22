@@ -249,9 +249,9 @@ function(estp_add_build_library ARCH)
         ${ESTP_${TOOL}_${ARCH}_DEFINES}
     )
 
-    target_include_directories(${LIB_NAME} INTERFACE
-        ${ESTOPPEL_ROOT}
-    )
+#    target_include_directories(${LIB_NAME} INTERFACE
+#        ${ESTP_ROOT}
+#    )
 
     target_link_libraries(${LIB_NAME} INTERFACE
         ${ESTP_LINK_FLAGS}

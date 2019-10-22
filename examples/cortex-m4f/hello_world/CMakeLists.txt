@@ -1,9 +1,15 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
-project(cm4f_sandbox C CXX ASM)
+set(ESTP_ARCH "arm")
+include("estoppel/cmake/Estoppel.cmake")
+
+project(hello_world C CXX ASM)
+
+add_subdirectory(estoppel)
 
 estp_add_firmware_executable(
     NAME
-        cm4f_sandbox.elf
+        hello_world.elf
     ARCH
         armcm4f
     SOURCES
