@@ -7,3 +7,6 @@
 [submodule "third_party/gcc-arm-none-eabi"]
 	path = third_party/gcc-arm-none-eabi
 	url = https://gitlab.com/dpalchak/gcc-arm-none-eabi
+[submodule "third_party/nordic"]
+	path = third_party/nordic
+	url = https://gitlab.com/dpalchak/nordic
