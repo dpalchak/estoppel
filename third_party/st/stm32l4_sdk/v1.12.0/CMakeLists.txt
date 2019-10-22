@@ -44,6 +44,7 @@ estp_add_interface_library(
         "-Wno-sign-conversion"
         "-Wno-switch-enum"
         "-Wno-unused-parameter"
+        "-Wno-attributes"
 )
 
 estp_add_static_library(
