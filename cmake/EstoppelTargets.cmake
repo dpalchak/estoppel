@@ -1,17 +1,6 @@
 
 include (CMakeParseArguments)
 
-# Get the Estoppel build library name for a given architecture in OUT_VAR
-# If the architecture isn't supported by the current toolchain, the
-# value "" will be returned
-function(estp_get_arch_build_library OUT_VAR ARCH)
-    set(ARCH_BUILD_LIB "estoppel_build-${ARCH}")
-    if(NOT TARGET ${ARCH_BUILD_LIB})
-        set(ARCH_BUILD_LIB "")
-    endif()
-    set(${OUT_VAR} ${ARCH_BUILD_LIB} PARENT_SCOPE)
-endfunction()
-
 # More convenient function for parsing arguments
 function(estp_parse_arguments input_text)
     # First we need to parse our optional arguments into three lists, only one of which we care about
@@ -110,9 +99,9 @@ function(estp_add_executable)
             NAME ARCH SOURCES
     )
 
-    # First get the build library for the specified architecture
-    estp_get_arch_build_library(ARCH_BUILD_LIB ${ARG_ARCH})
-    if(ARCH_BUILD_LIB)
+    # First get the flags library for the specified architecture
+    estp_get_arch_flags_lib(FLAGS_LIB ${ARG_ARCH})
+    if(FLAGS_LIB)
         message(STATUS "Adding executable ${ARG_NAME} (${ARG_ARCH})")
     else()
         message(STATUS "Skipping executable ${ARG_NAME} (${ARG_ARCH})")
@@ -122,7 +111,7 @@ function(estp_add_executable)
     add_executable(${ARG_NAME} ${ARG_SOURCES})
 
     # Add private dependency on architecture-specific library to pull-in build settings
-    target_link_libraries(${ARG_NAME} PRIVATE ${ARCH_BUILD_LIB})
+    target_link_libraries(${ARG_NAME} PRIVATE ${FLAGS_LIB})
 
     if(ARG_DEFINES)
         target_compile_definitions(${ARG_NAME} ${ARG_DEFINES})
@@ -166,8 +155,8 @@ function(estp_add_static_library)
     )
 
     # First get the build library for the specified architecture
-    estp_get_arch_build_library(ARCH_BUILD_LIB ${ARG_ARCH})
-    if(ARCH_BUILD_LIB)
+    estp_get_arch_flags_lib(FLAGS_LIB ${ARG_ARCH})
+    if(FLAGS_LIB)
         message(STATUS "Adding static library ${ARG_NAME} (${ARG_ARCH})")
     else()
         message(STATUS "Skipping static library ${ARG_NAME} (${ARG_ARCH})")
@@ -177,7 +166,7 @@ function(estp_add_static_library)
     add_library(${ARG_NAME} STATIC ${ARG_SOURCES})
 
     # Add private dependency on architecture-specific library to pull-in build settings
-    target_link_libraries(${ARG_NAME} PRIVATE ${ARCH_BUILD_LIB})
+    target_link_libraries(${ARG_NAME} PRIVATE ${FLAGS_LIB})
 
     if(ARG_LDFLAGS)
         target_link_libraries(${ARG_NAME} ${ARG_LDFLAGS})
@@ -219,8 +208,8 @@ function(estp_add_interface_library)
 
     if(DEFINED ARG_ARCH)
         # First get the build library for the specified architecture
-        estp_get_arch_build_library(ARCH_BUILD_LIB ${ARG_ARCH})
-        if(ARCH_BUILD_LIB)
+        estp_get_arch_flags_lib(FLAGS_LIB ${ARG_ARCH})
+        if(FLAGS_LIB)
             message(STATUS "Adding interface library ${ARG_NAME} (${ARG_ARCH})")
         else()
             message(STATUS "Skipping interface library ${ARG_NAME} (${ARG_ARCH})")
@@ -232,9 +221,9 @@ function(estp_add_interface_library)
 
     add_library(${ARG_NAME} INTERFACE)
 
-    if(ARCH_BUILD_LIB)
+    if(FLAGS_LIB)
         # Add dependency on architecture-specific library to pull-in build settings
-        target_link_libraries(${ARG_NAME} INTERFACE ${ARCH_BUILD_LIB})
+        target_link_libraries(${ARG_NAME} INTERFACE ${FLAGS_LIB})
     endif()
 
     if(ARG_SOURCES)
@@ -352,8 +341,8 @@ function(estp_add_test_executable)
     endif()
 
     # First get the build library for the specified architecture
-    estp_get_arch_build_library(ARCH_BUILD_LIB ${ARG_ARCH})
-    if(ARCH_BUILD_LIB)
+    estp_get_arch_flags_lib(FLAGS_LIB ${ARG_ARCH})
+    if(FLAGS_LIB)
         message(STATUS "Adding test executable ${ARG_NAME} (${ARG_ARCH})")
     else()
         message(STATUS "Skipping test executable ${ARG_NAME} (${ARG_ARCH})")
@@ -363,8 +352,8 @@ function(estp_add_test_executable)
     add_executable(${ARG_NAME} ${ARG_SOURCES})
 
     # Add private dependencies on architecture-specific library and Catch2 test runner
-    target_link_libraries(${ARG_NAME} PRIVATE 
-        ${ARCH_BUILD_LIB}
+    target_link_libraries(${ARG_NAME} PRIVATE
+        ${FLAGS_LIB}
         catch2_test_main-${ARG_ARCH}
     )
 

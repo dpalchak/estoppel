@@ -1,7 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
-set(ESTP_ARCH "arm")
-include("estoppel/cmake/Estoppel.cmake")
+set(CMAKE_TOOLCHAIN_FILE "estoppel/third_party/gcc-arm-none-eabi/Toolchain.cmake")
 
 project(hello_world C CXX ASM)
 

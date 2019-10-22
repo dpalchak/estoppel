@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ESTP_${COMPILER_ID}_${ARCHITECTURE}_${LANGUAGE}_${CATEGORY}
 #
 # Compiler ID: GNU, CLANG
-# Architecture: ARM, ARM***, HOST, HOST32
+# Architecture: ARM, ARMCMxx, HOST, HOST32
 # Language: C, CXX, ASM, COMMON, LINK
 # Category: WARNINGS, FLAGS, DEFINES
 #
@@ -20,6 +20,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(ESTP_DEFINES
     "ESTOPPEL=1"
+    "ESTP=1"
 )
 
 set(ESTP_ARM_DEFINES
@@ -211,15 +212,15 @@ set(ESTP_HOST32_DEFINES
 # Create interface libraries that all targets can depend on
 # to inherit the necessary compiler flags and warnings
 # We can't use estp_add_interface_library here because that function automatically
-# adds a dependency on the Estoppel build library that we're trying to define.
+# adds a dependency on the Estoppel flags library that we're trying to define.
 
-function(estp_add_build_library ARCH)
+function(estp_add_flags_library ARCH)
     string(TOLOWER ${ARCH} LIBARCH)
     string(TOUPPER ${ARCH} ARCH)
     string(TOUPPER ${CMAKE_C_COMPILER_ID} TOOL)
-    set(LIB_NAME estoppel_build-${LIBARCH})
+    set(LIB_NAME estp_flags-${LIBARCH})
 
-    message(STATUS "Adding library ${LIB_NAME}")
+    message(STATUS "Adding flags library ${LIB_NAME} (${LIBARCH})")
 
     add_library(${LIB_NAME} INTERFACE)
     target_compile_options(${LIB_NAME} INTERFACE
@@ -249,10 +250,6 @@ function(estp_add_build_library ARCH)
         ${ESTP_${TOOL}_${ARCH}_DEFINES}
     )
 
-#    target_include_directories(${LIB_NAME} INTERFACE
-#        ${ESTP_ROOT}
-#    )
-
     target_link_libraries(${LIB_NAME} INTERFACE
         ${ESTP_LINK_FLAGS}
         ${ESTP_${ARCH}_LINK_FLAGS}
@@ -260,8 +257,19 @@ function(estp_add_build_library ARCH)
     )
 
     foreach(PARENT_ARCH ${ARGN})
-        target_link_libraries(${LIB_NAME} INTERFACE estoppel_build-${PARENT_ARCH})
+        target_link_libraries(${LIB_NAME} INTERFACE estp_flags-${PARENT_ARCH})
     endforeach()
 
     list(APPEND ESTP_ACTIVE_ARCHS ${ARCH})
+endfunction()
+
+# Get the Estoppel build library name for a given architecture in OUT_VAR
+# If the architecture isn't supported by the current toolchain, the
+# value "" will be returned
+function(estp_get_arch_flags_lib OUT_VAR ARCH)
+    set(FLAGS_LIB "estp_flags-${ARCH}")
+    if(NOT TARGET ${FLAGS_LIB})
+        set(FLAGS_LIB "")
+    endif()
+    set(${OUT_VAR} ${FLAGS_LIB} PARENT_SCOPE)
 endfunction()
