@@ -1,6 +1,6 @@
 #undef ESTP_ASSERT_FULL_NAME
 
-#include "base/assert.h"
+#include "estp/base/assert.h"
 #include "catch2/catch.hpp"
 
 #include <iostream>

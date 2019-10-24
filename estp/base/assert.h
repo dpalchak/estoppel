@@ -1,8 +1,8 @@
 #pragma once
 
-#include "base/macros.h"
-#include "base/types.h"
-#include "data/meta_string.h"
+#include "estp/base/macros.h"
+#include "estp/base/types.h"
+#include "estp/data/meta_string.h"
 
 namespace estp {
 

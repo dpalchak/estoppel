@@ -1,6 +1,6 @@
 
-#include "data/meta_list.h"
-#include "base/meta.h"
+#include "estp/data/meta_list.h"
+#include "estp/base/meta.h"
 #include "catch2/catch.hpp"
 
 // MetaLists are meta-types, so manipulation of them all occurs at compile

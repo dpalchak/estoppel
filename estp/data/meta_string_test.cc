@@ -1,5 +1,5 @@
 
-#include "data/meta_string.h"
+#include "estp/data/meta_string.h"
 #include "catch2/catch.hpp"
 
 // MetStrings are meta-types, so manipulation of them all occurs at compile

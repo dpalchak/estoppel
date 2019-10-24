@@ -48,4 +48,4 @@ else()
 endif()
 
 add_subdirectory(third_party)
-add_subdirectory(lib)
+add_subdirectory(estp)

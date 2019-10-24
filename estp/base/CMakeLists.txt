@@ -8,7 +8,7 @@ foreach(ARCH ${ESTP_ARCHS})
         SOURCES
             assert.cc
         INCLUDE_DIRS PUBLIC
-            ${ESTP_ROOT}/lib
+            ${ESTP_ROOT}
     )
 endforeach()
 
