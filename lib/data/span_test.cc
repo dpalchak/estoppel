@@ -16,8 +16,12 @@ static void HandleAssertion(AssertionContext const &) {
     ++assert_count;
 }
 
+
 static char const kNumbers[] = "0123456789"; // note that this includes a terminating null
 static char letters[10] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' };
+
+template<typename T>
+struct PrintType {};
 
 TEST_CASE("Span<T> ctor") {
     assert_count = 0;
@@ -34,10 +38,10 @@ TEST_CASE("Span<T> ctor") {
     REQUIRE(span_from_const_array == span_from_pointer_size);
     REQUIRE(span_from_array == span_from_pointer_pointer);
 
-    std::array std_array_letters {letters};
+    std::array<char,10> std_array_letters { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' };
     Span span_from_std_array {std_array_letters};
 
-    std::vector vector_letters {letters};
+    std::vector<char> vector_letters {letters, std::end(letters)};
     Span span_from_std_vector {vector_letters};
 
     REQUIRE(span_from_std_array == span_from_std_vector);

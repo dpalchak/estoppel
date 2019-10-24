@@ -50,7 +50,7 @@ public:
 
     constexpr Span(Pointer begin_, Pointer end_) : Span{begin_, end_ - begin_} {}
 
-    template<typename U, auto N>
+    template<typename U, Index N>
     constexpr Span(U (&arr)[N]) : _begin{arr}, _size{N} {}
 
     template<typename U>
