@@ -1,28 +1,45 @@
 
-project(libstm32l4sdk C CXX ASM)
+project(stm32l4_sdk C CXX ASM)
 
-estp_add_interface_library(
-    NAME
-        stm32l4sdk_cmsis
-    ARCH
-        armcm4f
-    INCLUDE_DIRS
-        "Drivers/CMSIS/Include"
-        "Drivers/CMSIS/Device/ST/STM32L4xx/Include"
+# estp_add_interface_library(
+#     NAME
+#         stm32l4sdk_cmsis
+#     ARCH
+#         armcm4f
+#     INCLUDE_DIRS
+#         "Drivers/CMSIS/Include"
+#         "Drivers/CMSIS/Device/ST/STM32L4xx/Include"
+# )
+add_estp_library(stm32l4sdk_cmsis INTERFACE)
+
+target_include_directories(stm32l4sdk_cmsis INTERFACE
+    "Drivers/CMSIS/Include"
+    "Drivers/CMSIS/Device/ST/STM32L4xx/Include"
 )
 
 # Interface library target for CMSIS DSP library targeting hard FPU devices
-estp_add_interface_library(
-    NAME
-        stm32l4sdk_dsp
-    ARCH
-        armcm4f
-    LIBRARIES
-        stm32l4sdk_cmsis
-        "Drivers/CMSIS/Lib/GCC/libarm_cortexM4lf_math.a"
-    DEFINES
-        "__FPU_USED=1"
-        "__FPU_PRESENT=1"
+# estp_add_interface_library(
+#     NAME
+#         stm32l4sdk_dsp
+#     ARCH
+#         armcm4f
+#     LIBRARIES
+#         stm32l4sdk_cmsis
+#         "Drivers/CMSIS/Lib/GCC/libarm_cortexM4lf_math.a"
+#     DEFINES
+#         "__FPU_USED=1"
+#         "__FPU_PRESENT=1"
+# )
+add_estp_library(stm32l4sdk_dsp INTERFACE)
+
+target_link_libraries(stm32l4sdk_dsp INTERFACE
+    stm32l4sdk_cmsis
+    "Drivers/CMSIS/Lib/GCC/libarm_cortexM4lf_math.a"
+)
+
+target_compile_definitions(stm32l4sdk_dsp INTERFACE
+    "__FPU_USED=1"
+    "__FPU_PRESENT=1"
 )
 
 # Static library for SDK HAL
@@ -35,34 +52,64 @@ file(GLOB STM32L4_SDK_HAL_SRCS "Drivers/STM32L4xx_HAL_Driver/Src/*.c")
 # target-specific CFLAGS. Since we're turning off warnings that are explicitly
 # turned on by the Estoppel build library, we need these flags to appear at
 # the end of the command line. Hence the "_hack" suffix.
-estp_add_interface_library(
-    NAME
-        stm32l4sdk_hal_warnings_hack
-    CFLAGS
-        # The SDK code has relies on some questionable constructs...
-        "-Wno-conversion"
-        "-Wno-sign-conversion"
-        "-Wno-switch-enum"
-        "-Wno-unused-parameter"
-        "-Wno-attributes"
+# estp_add_interface_library(
+#     NAME
+#         stm32l4sdk_hal_warnings_hack
+#     CFLAGS
+#         # The SDK code has relies on some questionable constructs...
+#         "-Wno-conversion"
+#         "-Wno-sign-conversion"
+#         "-Wno-switch-enum"
+#         "-Wno-unused-parameter"
+#         "-Wno-attributes"
+# )
+add_library(stm32l4sdk_hal_warnings_hack INTERFACE)
+target_compile_options(stm32l4sdk_hal_warnings_hack INTERFACE
+    # The SDK code has relies on some questionable constructs...
+    "-Wno-conversion"
+    "-Wno-sign-conversion"
+    "-Wno-switch-enum"
+    "-Wno-unused-parameter"
+    "-Wno-attributes"
 )
 
-estp_add_static_library(
-    NAME
-        stm32l4sdk_hal-stm32l486
-    ARCH
-        armcm4f
-    SOURCES
-        ${STM32L4_SDK_HAL_SRCS}
-    DEFINES PRIVATE
-        "USE_HAL_DRIVER"
-    INCLUDE_DIRS PUBLIC
-        "Drivers/STM32L4xx_HAL_Driver/Inc"
-    LIBRARIES
-        PUBLIC
+
+# estp_add_static_library(
+#     NAME
+#         stm32l4sdk_hal-stm32l486
+#     ARCH
+#         armcm4f
+#     SOURCES
+#         ${STM32L4_SDK_HAL_SRCS}
+#     DEFINES PRIVATE
+#         "USE_HAL_DRIVER"
+#     INCLUDE_DIRS PUBLIC
+#         "Drivers/STM32L4xx_HAL_Driver/Inc"
+#     LIBRARIES
+#         PUBLIC
+#         # Depend on a library defined elsewhere that provides the configuration
+#         stm32l4sdk_config-stm32l486
+#         stm32l4sdk_cmsis
+#         PRIVATE
+#         stm32l4sdk_hal_warnings_hack
+# )
+add_estp_library(stm32l4sdk_hal-stm32l486 STATIC
+    ${STM32L4_SDK_HAL_SRCS}
+)
+
+target_compile_definitions(stm32l4sdk_hal-stm32l486 PRIVATE
+    "USE_HAL_DRIVER"
+)
+
+target_include_directories(stm32l4sdk_hal-stm32l486 PUBLIC
+    "Drivers/STM32L4xx_HAL_Driver/Inc"
+)
+
+target_link_libraries(stm32l4sdk_hal-stm32l486
+    PUBLIC
         # Depend on a library defined elsewhere that provides the configuration
         stm32l4sdk_config-stm32l486
         stm32l4sdk_cmsis
-        PRIVATE
+    PRIVATE
         stm32l4sdk_hal_warnings_hack
 )

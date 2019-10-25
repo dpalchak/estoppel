@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.9)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
+include_guard()
 
 # Enforce minimum language standards
 set(CMAKE_C_STANDARD 11)
@@ -11,8 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ESTP_${COMPILER_ID}_${ARCHITECTURE}_${LANGUAGE}_${CATEGORY}
 #
 # Compiler ID: GNU, CLANG
-# Architecture: ARM, ARMCMxx, HOST, HOST32
-# Language: C, CXX, ASM, COMMON, LINK
+# Target: HOST, DEVICE
+# Language: COMMON, C, CXX, ASM, LINK
 # Category: WARNINGS, FLAGS, DEFINES
 #
 # Only the 'category' field is required
@@ -23,11 +24,11 @@ set(ESTP_DEFINES
     "ESTP=1"
 )
 
-set(ESTP_ARM_DEFINES
-    "ESTP_ARM=1"
+set(ESTP_DEVICE_DEFINES
+    "ESTP_DEVICE=1"
 )
 
-set(ESTP_GNU_ARM_WARNINGS
+set(ESTP_GNU_DEVICE_WARNINGS
     "-Wall"                    # common warnings
     "-Wextra"                  # extra warnings
     "-Werror"                  # warnings are errors
@@ -44,7 +45,7 @@ set(ESTP_GNU_ARM_WARNINGS
     "-Wno-comment"             # nested comments fine
 )
 
-set(ESTP_GNU_ARM_COMMON_FLAGS
+set(ESTP_GNU_DEVICE_COMMON_FLAGS
     "-fwrapv"                  # signed numbers wrap around on arithemtic overflow/underflow
     "-fdiagnostics-color"      # color compiler output
     "-fomit-frame-pointer"     # no frame pointer
@@ -61,7 +62,7 @@ set(ESTP_GNU_ARM_COMMON_FLAGS
     "-g3"                      # all builds include debug info
 )
 
-set(ESTP_GNU_ARM_CXX_FLAGS
+set(ESTP_GNU_DEVICE_CXX_FLAGS
     "-Weffc++"                 # Scott Meyers' Effective C++ warnings
     "-Wsuggest-override"       # virtual functions not marked with override
     "-Wplacement-new=2"        # no undefined behavior with placement new
@@ -73,7 +74,7 @@ set(ESTP_GNU_ARM_CXX_FLAGS
     "-fno-implicit-templates"  # require explicit instantiation of all templates
 )
 
-set(ESTP_GNU_ARM_LINK_FLAGS
+set(ESTP_GNU_DEVICE_LINK_FLAGS
     "-static"                  # static linking
     "-fdiagnostics-color"      # color output
     "-fno-exceptions"          # disable exceptions
@@ -82,7 +83,7 @@ set(ESTP_GNU_ARM_LINK_FLAGS
     "-Wl,--gc-sections"        # elide unused sections (functions and vars)
 )
 
-set(ESTP_GNU_ARM_ASM_FLAGS
+set(ESTP_GNU_DEVICE_ASM_FLAGS
     "-Wa,--warn"               # enable warnings
 )
 
@@ -120,6 +121,7 @@ set(ESTP_CLANG_HOST_WARNINGS
     "-Wno-comment"                  # nested comments fine
     "-Wno-reserved-id-macro"        # CppUTest: allow macros for reserved IDs
     "-Wno-disabled-macro-expansion" # CppUTest: nested macros
+    "-Wno-missing-braces"           # Disable Clang's overzealous missing-braces warnings
 )
 
 set(ESTP_CLANG_HOST_COMMON_FLAGS
@@ -132,144 +134,18 @@ set(ESTP_CLANG_HOST_CXX_FLAGS
     "-Wno-keyword-macro"            # CppUTest: #define 'new'
 )
 
-# Architecture specific flags
-# ARM Cortex-M4F
-set(ESTP_GNU_ARMCM4F_COMMON_FLAGS
-    "-mcpu=cortex-m4"
-    "-mlittle-endian"
-    "-mfpu=fpv4-sp-d16"
-    "-mfloat-abi=hard"
-    "-mthumb"
-    "-mthumb-interwork"
-    "-mabi=aapcs"
-)
-set(ESTP_GNU_ARMCM4F_LINK_FLAGS
-    ${ESTP_GNU_ARMCM4F_COMMON_FLAGS}
-)
-set(ESTP_ARMCM4F_DEFINES
-    "ESTP_ARMCM4F=1"
+set(ESTP_OPT_NONE_FLAGS
+    "-O0"
 )
 
-# ARM Cortex-M4 (no FPU)
-set(ESTP_GNU_ARMCM4_COMMON_FLAGS
-    "-mcpu=cortex-m4"
-    "-mlittle-endian"
-    "-mfloat-abi=soft"
-    "-mthumb"
-    "-mthumb-interwork"
-    "-mabi=aapcs"
-)
-set(ESTP_GNU_ARMCM4_LINK_FLAGS
-    ${ESTP_GNU_ARMCM4_COMMON_FLAGS}
-)
-set(ESTP_ARMCM4_DEFINES
-    "ESTP_ARMCM4=1"
+set(ESTP_OPT_DEBUG_FLAGS
+    "-Og"
 )
 
-# ARM Cortex-M3
-set(ESTP_GNU_ARMCM3_COMMON_FLAGS
-    "-mcpu=cortex-m3"
-    "-mlittle-endian"
-    "-mfloat-abi=soft"
-    "-mthumb"
-    "-mthumb-interwork"
-    "-mabi=aapcs"
-)
-set(ESTP_GNU_ARMCM3_LINK_FLAGS
-    ${ESTP_GNU_ARMCM3_COMMON_FLAGS}
-)
-set(ESTP_ARMCM3_DEFINES
-    "ESTP_ARMCM3=1"
+set(ESTP_OPT_SIZE_FLAGS
+    "-Os"
 )
 
-# ARM Cortex-M0
-set(ESTP_GNU_ARMCM0P_COMMON_FLAGS
-    "-mcpu=cortex-m0plus"
-    "-mlittle-endian"
-    "-mfloat-abi=soft"
-    "-mthumb"
-    "-mthumb-interwork"
-    "-mabi=aapcs"
+set(ESP_OPT_SPEED_FLAGS
+    "-O2"
 )
-set(ESTP_GNU_ARMCM0P_LINK_FLAGS
-    ${ESTP_GNU_ARMCM0P_COMMON_FLAGS}
-)
-set(ESTP_ARMCM0P_DEFINES
-    "ESTP_ARMCM0P=1"
-)
-
-# 32-bit host arch
-set(ESTP_HOST32_COMMON_FLAGS
-    "-m32"
-)
-set(ESTP_HOST32_LINK_FLAGS
-    ${ESTP_HOST32_COMMON_FLAGS}
-)
-set(ESTP_HOST32_DEFINES
-    "ESTP_HOST32=1"
-)
-
-# Create interface libraries that all targets can depend on
-# to inherit the necessary compiler flags and warnings
-# We can't use estp_add_interface_library here because that function automatically
-# adds a dependency on the Estoppel flags library that we're trying to define.
-
-function(estp_add_flags_library ARCH)
-    string(TOLOWER ${ARCH} LIBARCH)
-    string(TOUPPER ${ARCH} ARCH)
-    string(TOUPPER ${CMAKE_C_COMPILER_ID} TOOL)
-    set(LIB_NAME estp_flags-${LIBARCH})
-
-    message(STATUS "Adding flags library ${LIB_NAME} (${LIBARCH})")
-
-    add_library(${LIB_NAME} INTERFACE)
-    target_compile_options(${LIB_NAME} INTERFACE
-        ${ESTP_WARNINGS}
-        ${ESTP_${ARCH}_WARNINGS}
-        ${ESTP_${TOOL}_WARNINGS}
-        ${ESTP_${TOOL}_${ARCH}_WARNINGS}
-        ${ESTP_COMMON_FLAGS}
-        ${ESTP_${ARCH}_COMMON_FLAGS}
-        ${ESTP_${TOOL}_COMMON_FLAGS}
-        ${ESTP_${TOOL}_${ARCH}_COMMON_FLAGS}
-    )
-
-    foreach(LANG C CXX ASM)
-        estp_target_lang_compile_options(${LIB_NAME} ${LANG} INTERFACE
-            ${ESTP_${LANG}_FLAGS}
-            ${ESTP_${ARCH}_${LANG}_FLAGS}
-            ${ESTP_${TOOL}_${LANG}_FLAGS}
-            ${ESTP_${TOOL}_${ARCH}_${LANG}_FLAGS}
-        )
-    endforeach()
-
-    target_compile_definitions(${LIB_NAME} INTERFACE
-        ${ESTP_DEFINES}
-        ${ESTP_${TOOL}_DEFINES}
-        ${ESTP_${ARCH}_DEFINES}
-        ${ESTP_${TOOL}_${ARCH}_DEFINES}
-    )
-
-    target_link_libraries(${LIB_NAME} INTERFACE
-        ${ESTP_LINK_FLAGS}
-        ${ESTP_${ARCH}_LINK_FLAGS}
-        ${ESTP_${TOOL}_${ARCH}_LINK_FLAGS}
-    )
-
-    foreach(PARENT_ARCH ${ARGN})
-        target_link_libraries(${LIB_NAME} INTERFACE estp_flags-${PARENT_ARCH})
-    endforeach()
-
-    list(APPEND ESTP_ACTIVE_ARCHS ${ARCH})
-endfunction()
-
-# Get the Estoppel build library name for a given architecture in OUT_VAR
-# If the architecture isn't supported by the current toolchain, the
-# value "" will be returned
-function(estp_get_arch_flags_lib OUT_VAR ARCH)
-    set(FLAGS_LIB "estp_flags-${ARCH}")
-    if(NOT TARGET ${FLAGS_LIB})
-        set(FLAGS_LIB "")
-    endif()
-    set(${OUT_VAR} ${FLAGS_LIB} PARENT_SCOPE)
-endfunction()

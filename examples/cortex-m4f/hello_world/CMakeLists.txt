@@ -1,22 +1,16 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
-set(CMAKE_TOOLCHAIN_FILE "estoppel/third_party/gcc-arm-none-eabi/Toolchain.cmake")
+set(ESTP_PLATFORM stm32l4x6xg)
 
-project(hello_world C CXX ASM)
+include("estoppel/cmake/estp_app.cmake")
 
-add_subdirectory(estoppel)
+project(HelloWorld)
 
-estp_add_firmware_executable(
-    NAME
-        hello_world.elf
-    ARCH
-        armcm4f
-    SOURCES
-    	main.cc
-	LIBRARIES PRIVATE
-        stm32l4sdk_hal-stm32l486
-        stm32l4x6xg
-    LDFLAGS PRIVATE
-        --specs=nano.specs       # use minimal newlib config
-        --specs=nosys.specs      # use empty syscalls
+add_estp_executable(hello_world
+    main.cc
+)
+
+target_link_options(hello_world PRIVATE
+    --specs=nano.specs       # use minimal newlib config
+    --specs=nosys.specs      # use empty syscalls
 )

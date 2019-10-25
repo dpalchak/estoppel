@@ -1,22 +1,13 @@
 
-foreach(ARCH ${ESTP_HOST_ARCHS})
-    estp_add_static_library(
-        NAME
-            catch2_test_main-${ARCH}
-        ARCH
-            ${ARCH}
-        SOURCES
-            catch2_test_main.cc
-        LIBRARIES PUBLIC
-            Catch2::Catch2
-    )
-    
-    estp_add_test_executable(
-        NAME
-            testing_test-${ARCH}
-        ARCH
-            ${ARCH}
-        SOURCES
-            testing_test.cc
-    )
-endforeach()
+add_estp_library(catch2_test_fixture STATIC
+    catch2_test_fixture.cc
+)
+
+target_link_libraries(catch2_test_fixture PUBLIC
+    Catch2::Catch2
+)
+
+# Add a very simple test just to confirm our test fixture is building correctly
+add_estp_unit_test(test_fixture_test
+    testing_test.cc
+)

@@ -1,19 +1,16 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
-project(hello_world C CXX)
+set(ESTP_PLATFORM host)
+set(ESTP_BUILD_TESTING ON)
 
-include(CTest)
-enable_testing()
+include("estoppel/cmake/estp_app.cmake")
 
-add_subdirectory(estoppel)
+project(HelloWorld)
 
-estp_add_executable(
-    NAME
-        hello_world
-    ARCH
-        host
-    SOURCES
-        main.cc
-    DEFINES
-        PRIVATE SPECIAL_MESSAGE=\"Greetings\ from\ nowhere\"
+add_estp_executable(hello_world
+    main.cc
+)
+
+target_compile_definitions(hello_world PRIVATE
+    SPECIAL_MESSAGE=\"Greetings\ from\ nowhere\"
 )
