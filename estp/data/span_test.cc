@@ -49,7 +49,6 @@ TEST_CASE("Span<T> ctor") {
 
 TEST_CASE("Span<T> accessors") {
     Span letters_span{letters};
-    Span numbers_span{kNumbers};
     SECTION( "first()" ) {
         for(Index count=0; count<letters_span.size(); ++count) {
             auto prefix = letters_span.first(count);
