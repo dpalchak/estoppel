@@ -67,12 +67,12 @@ SECTIONS
         *(.rodata*)
     } >FLASH
 
+#if KEEP_EXCEPTIONS
     /* Exception handling frame */
     .eh_frame : {
         KEEP(*(.eh_frame*))
     } > FLASH
 
-#if KEEP_EXCEPTIONS
     /* ARM exception tables */
     .ARM.extab : {
         *(.ARM.extab* .gnu.linkonce.armextab.*)
