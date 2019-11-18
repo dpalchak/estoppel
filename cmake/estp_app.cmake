@@ -30,13 +30,19 @@ unset(CMAKE_BUILD_TYPE)
 
 # Prefer instead to select optimization through a normal variable
 set(_ESTP_VALID_OPT_VALUES none debug size speed)
-set(ESTP_OPT debug CACHE STRING "Optimization level")
+if(NOT ESTP_OPT)
+    set(ESTP_OPT debug)
+endif()
+
+set(ESTP_OPT ${ESTP_OPT} CACHE STRING "Optimization level")
+
 if(NOT ESTP_OPT IN_LIST _ESTP_VALID_OPT_VALUES)
     message(FATAL_ERROR "Invalid ESTP_OPT optimization setting: '${ESTP_OPT}'")
     message(STATUS "Valid values are ${_ESTP_VALID_OPT_VALUES}")
 else()
     message(STATUS "Optimizing for '${ESTP_OPT}'")
 endif()
+
 
 project(EstoppelApp LANGUAGES C CXX)
 

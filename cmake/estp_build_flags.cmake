@@ -146,6 +146,6 @@ set(ESTP_OPT_SIZE_FLAGS
     "-Os"
 )
 
-set(ESP_OPT_SPEED_FLAGS
-    "-O2"
+set(ESTP_OPT_SPEED_FLAGS
+    "-O3"
 )
