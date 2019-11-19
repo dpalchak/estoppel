@@ -14,13 +14,13 @@ target_compile_options(nordic_sdk_warnings_hack INTERFACE
     $<$<COMPILE_LANGUAGE:C>:-Wno-discarded-qualifiers>
 )
 
-add_estp_platform_libraries(nrf52)
+add_estp_platform_libraries(nrf52832_xxaa)
 
-target_link_libraries(nrf52_platform_link INTERFACE
-    "-L${NRF5_SDK_ROOT}/modules/nrfx/mdk"
+target_link_libraries(nrf52832_xxaa_platform_link INTERFACE
+    "-L${CMAKE_CURRENT_LIST_DIR}"
 )
 
-target_include_directories(nrf52_platform_build INTERFACE
+target_include_directories(nrf52832_xxaa_platform_build INTERFACE
     ${NRF5_SDK_ROOT}/components
     ${NRF5_SDK_ROOT}/components/boards
     ${NRF5_SDK_ROOT}/components/drivers_nrf/nrf_soc_nosd
@@ -51,7 +51,7 @@ target_include_directories(nrf52_platform_build INTERFACE
     ${NRF5_SDK_ROOT}/modules/nrfx/drivers/include
 )
 
-target_compile_definitions(nrf52_platform_build INTERFACE
+target_compile_definitions(nrf52832_xxaa_platform_build INTERFACE
     "FLOAT_ABI_HARD"
     "NRF52"
     "NRF52832_XXAA"
@@ -60,7 +60,7 @@ target_compile_definitions(nrf52_platform_build INTERFACE
     "BSP_DEFINES_ONLY"
 )
 
-target_compile_options(nrf52_platform_build INTERFACE
+target_compile_options(nrf52832_xxaa_platform_build INTERFACE
     "-mcpu=cortex-m4"
     "-mlittle-endian"
     "-mfpu=fpv4-sp-d16"
@@ -70,7 +70,7 @@ target_compile_options(nrf52_platform_build INTERFACE
     "-mabi=aapcs"
 )
 
-target_link_options(nrf52_platform_build INTERFACE
+target_link_options(nrf52832_xxaa_platform_build INTERFACE
     "-mcpu=cortex-m4"
     "-mlittle-endian"
     "-mfpu=fpv4-sp-d16"
@@ -81,7 +81,7 @@ target_link_options(nrf52_platform_build INTERFACE
 )
 
 # TODO(palchak): fix this shit by creating real libraries for NRF5 SDK
-target_sources(nrf52_platform_sources PRIVATE
+target_sources(nrf52832_xxaa_platform_sources PRIVATE
     ${NRF5_SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52.S
     ${NRF5_SDK_ROOT}/modules/nrfx/mdk/system_nrf52.c
     ${NRF5_SDK_ROOT}/modules/nrfx/soc/nrfx_atomic.c
@@ -112,11 +112,11 @@ target_sources(nrf52_platform_sources PRIVATE
     ${NRF5_SDK_ROOT}/external/fprintf/nrf_fprintf_format.c
 )
 
-target_link_libraries(nrf52_platform_sources PRIVATE
+target_link_libraries(nrf52832_xxaa_platform_sources PRIVATE
     nordic_sdk_warnings_hack
 )
 
-add_estp_platform_libraries(nrf52_pca10040 EXTENDS nrf52)
+add_estp_platform_libraries(nrf52_pca10040 EXTENDS nrf52832_xxaa)
 
 target_compile_definitions(nrf52_pca10040_platform_build INTERFACE
     "BOARD_PCA10040"

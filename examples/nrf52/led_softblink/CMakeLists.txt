@@ -24,7 +24,7 @@ target_include_directories(estp_build INTERFACE
 )
 
 target_link_libraries(estp_link INTERFACE
-    "-T${EXAMPLE_ROOT}/pca10040/blank/armgcc/led_softblink_gcc_nrf52.ld"
+    "-Tnrf52832_xxaa_nosd.ld"
 )
 
 add_estp_executable(led_softblink
