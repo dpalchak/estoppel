@@ -56,6 +56,8 @@ target_compile_definitions(nrf52_platform_build INTERFACE
     "NRF52"
     "NRF52832_XXAA"
     "NRF52_PAN_74"
+    "APP_TIMER_V2"
+    "BSP_DEFINES_ONLY"
 )
 
 target_compile_options(nrf52_platform_build INTERFACE

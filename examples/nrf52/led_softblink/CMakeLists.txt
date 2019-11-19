@@ -12,9 +12,7 @@ set(EXAMPLE_ROOT "${NRF5_SDK_ROOT}/examples/peripheral/led_softblink")
 set(EXAMPLE_CONFIG_ROOT "${EXAMPLE_ROOT}/pca10040/blank/config")
 
 target_compile_definitions(estp_build INTERFACE
-    "APP_TIMER_V2"
     "APP_TIMER_V2_RTC1_ENABLED"
-    "BSP_DEFINES_ONLY"
     "CONFIG_GPIO_AS_PINRESET"
     "__HEAP_SIZE=8192"
     "__STACK_SIZE=8192"
