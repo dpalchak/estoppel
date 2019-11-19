@@ -10,3 +10,6 @@
 [submodule "third_party/nordic"]
 	path = third_party/nordic
 	url = https://gitlab.com/dpalchak/nordic
+[submodule "third_party/segger"]
+	path = third_party/segger
+	url = https://gitlab.com/dpalchak/segger.git
