@@ -1,0 +1,9 @@
+{
+  "search.useIgnoreFiles": false,
+  "cmake.buildBeforeRun": false,
+  "cmake.generator": "Unix Makefiles",
+  "cmake.configureOnOpen": false,
+  "cmake.buildDirectory": "${workspaceFolder}/BUILD",
+  "cmake.debugConfig": {},
+  "C_Cpp.clang_format_fallbackStyle": "Google",
+}
