@@ -73,5 +73,5 @@ if(ESTP_BUILD_TESTING)
 endif()
 
 # Add Estoppel directory for processing
-add_subdirectory("${ESTP_ROOT}" estoppel)
+add_subdirectory("${ESTP_ROOT}" estoppel EXCLUDE_FROM_ALL)
 
