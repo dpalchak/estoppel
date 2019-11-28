@@ -68,7 +68,7 @@ endif()
 if(ESTP_BUILD_TESTING)
     include(CTest)
     enable_testing()
-    include("${ESTP_ROOT}/third_party/catch2/upstream/contrib/Catch.cmake")
+    include("${ESTP_ROOT}/third_party/catch2/contrib/Catch.cmake")
     message(STATUS "Testing enabled")
 endif()
 
