@@ -1,9 +1,6 @@
 [submodule "expected-lite"]
 	path = third_party/expected-lite/upstream
 	url = https://github.com/martinmoene/expected-lite.git
-[submodule "catch2"]
-	path = third_party/catch2/upstream
-	url = https://github.com/catchorg/Catch2
 [submodule "third_party/gcc-arm-none-eabi"]
 	path = third_party/gcc-arm-none-eabi
 	url = https://gitlab.com/dpalchak/gcc-arm-none-eabi
@@ -13,3 +10,6 @@
 [submodule "third_party/segger"]
 	path = third_party/segger
 	url = https://gitlab.com/dpalchak/segger.git
+[submodule "third_party/catch2"]
+	path = third_party/catch2
+	url = https://github.com/catchorg/Catch2
