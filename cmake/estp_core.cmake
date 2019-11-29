@@ -160,6 +160,9 @@ function(add_estp_executable NAME)
     )
 
     if(ESTP_DEVICE_PLATFORM)
+        add_custom_command(TARGET ${NAME} POST_BUILD
+            COMMAND chmod -x $<TARGET_FILE_NAME:${NAME}>
+        )
         _add_estp_bin_output(${NAME})
         _add_estp_hex_output(${NAME})
         _add_estp_sizeinfo_output(${NAME})

@@ -117,6 +117,7 @@ function(_add_estp_bin_output TARGET_NAME)
     add_custom_command(
         TARGET ${TARGET_NAME}
         COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE_NAME:${TARGET_NAME}> ${BIN_FILE_NAME}
+        COMMAND chmod -x ${BIN_FILE_NAME}
         DEPENDS ${TARGET_NAME}
         COMMENT "Create binary image: ${BIN_FILE_NAME}"
     )
