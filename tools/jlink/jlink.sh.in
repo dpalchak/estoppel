@@ -1,0 +1,78 @@
+#!/bin/bash
+
+#---- Start Configuration Section ----
+# These variables are substituted by CMake during the configure step
+
+jlink_commander=$(realpath "@JLINK_COMMANDER_EXE@")
+jlink_gdbserver=$(realpath "@JLINK_GDBSERVER_EXE@")
+jlink_device=@JLINK_DEVICE@
+jlink_interface=@JLINK_INTERFACE@
+jlink_speed=@JLINK_SPEED@
+
+firmware_hexfile=$(realpath "@FIRMWARE_HEXFILE@")
+
+#---- End Configuration Section ----
+
+script_name=$(basename $0)
+
+jlink_halt_cmd="h \n"
+jlink_go_cmd="g \n"
+jlink_reset_cmd="r \n"
+jlink_quit_cmd="q \n"
+jlink_erase_cmd="erase \n"
+jlink_load_cmd="loadfile $firmware_hexfile \n"
+jlink_commander_args="-Device $jlink_device -If $jlink_interface -Speed $jlink_speed -AutoConnect 1"
+jlink_commander_cmdline="$jlink_commander $jlink_commander_args"
+
+jlink_gdbserver_args="-select USB -device $jlink_device -endian little "\
+"-if $jlink_interface -speed $jlink_speed -ir -noLocalhostOnly"
+
+jlink_gdbserver_cmdline="$jlink_gdbserver $jlink_gdbserver_args"
+
+cmd_help(){
+    echo "Usage: $script_name <subcommand> [options]"
+    echo ""
+    echo "Subcommands:"
+    echo "    help        Show this message"
+    echo "    reset       Reset the target. Target will automatically resume."
+    echo "    erase       Erase flash"
+    echo "    load        Load a file into memory. Target will automatically reset and resume."
+    echo ""
+}
+
+cmd_info(){
+    ${jlink_commander} --help
+}
+cmd_reset(){
+    printf "$jlink_halt_cmd $jlink_reset_cmd $jlink_quit_cmd" | $jlink_commander_cmdline
+}
+
+cmd_erase(){
+    printf "$jlink_halt_cmd $jlink_erase_cmd $jlink_quit_cmd" | $jlink_commander_cmdline
+}
+
+cmd_load(){
+    printf "$jlink_halt_cmd $jlink_load_cmd $jlink_reset_cmd $jlink_quit_cmd" | \
+        $jlink_commander_cmdline
+}
+
+cmd_gdbserver(){
+    $jlink_gdbserver_cmdline &
+}
+
+subcommand=$1
+case $subcommand in
+    "")
+        cmd_help
+        ;;
+    *)
+        shift
+        cmd_${subcommand} $@
+        if [ $? = 127 ]; then
+            echo "Error: unknown subcommand '$subcommand' " >&2
+            echo ""
+            cmd_help
+            exit 1
+        fi
+        ;;
+esac

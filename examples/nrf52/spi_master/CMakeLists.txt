@@ -80,3 +80,5 @@ target_link_libraries(spi_master PRIVATE
     nrf5_sdk_warnings_hack
     "-Tnrf52832_xxaa_nosd.ld"   # use SDK provided linker script
 )
+
+add_estp_jlink_targets(spi_master)

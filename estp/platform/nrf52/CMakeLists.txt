@@ -111,3 +111,5 @@ target_sources(nrf52_pca10040_platform_sources PRIVATE
 target_link_libraries(nrf52_pca10040_platform_sources PRIVATE
     nrf5_sdk_warnings_hack
 )
+
+set_estp_platform_jlink_config(nrf52_pca10040 NRF52832_XXAA SWD 4000)
