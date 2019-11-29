@@ -1,17 +1,26 @@
 {
-    "env": {
-        "crossCompilerPath":
-        "${workspaceFolder}/estoppel/third_party/gcc-arm-none-eabi/darwin/latest/bin/arm-none-eabi-gcc"
-    },
+    "env": {},
     "configurations": [
         {
-            "name": "led_softblink : nrf52_dk",
+            "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "${crossCompilerPath}",
+            "compilerPath": "${workspaceFolder}/estoppel/third_party/gcc-arm-none-eabi/darwin/latest/bin/arm-none-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x86",
+            "compileCommands": "${workspaceFolder}/BUILD/compile_commands.json"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "${workspaceFolder}/estoppel/third_party/gcc-arm-none-eabi/linux/latest/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x86",
