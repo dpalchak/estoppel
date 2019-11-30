@@ -97,12 +97,16 @@ template<class T> void FORCE_USED( const T& ) { }
 // Example: GCC 4.9.0 => 40900
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 
+
+// Print compile time messages that are not warnings
+#define _PRAGMA(x) _Pragma (#x)
+#define COMPILE_MESSAGE(x) _PRAGMA(message (#x))
+#define TODO(x) COMPILE_MESSAGE("TODO: " #x)
+
+
 #else // __GNUC__
 
 // This is temporary
 #error "Unsupported compiler"
 
 #endif // __GNUC__
-
-
-
