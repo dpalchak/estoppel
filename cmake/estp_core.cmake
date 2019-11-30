@@ -203,7 +203,7 @@ function(add_estp_unit_test NAME)
         estp_link
         catch2_test_fixture
     )
-    catch_discover_tests(${NAME} TEST_PREFIX "[FOO]...")
+    catch_discover_tests(${NAME} TEST_PREFIX "[${NAME}]...")
 endfunction(add_estp_unit_test)
 
 
