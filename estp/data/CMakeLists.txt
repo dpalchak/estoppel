@@ -4,6 +4,7 @@ add_estp_library(estp_data INTERFACE)
 if(ESTP_HOST_PLATFORM)
     add_estp_unit_test(estp_data_test
         accumulator_test.cc
+        bitfield_test.cc
         final_action_test.cc
         meta_list_test.cc
         meta_string_test.cc

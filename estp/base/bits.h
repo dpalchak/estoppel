@@ -10,22 +10,24 @@ constexpr auto bitsize() -> IndexConstant<static_cast<Index>(sizeof(T)*CHAR_BIT)
     return {};
 }
 
-struct Lsb : NamedIndex<Lsb> {};
-struct Msb : NamedIndex<Msb> {};
-struct Width : NamedIndex<Width> {};
+// Use enums instead of StrongType here so that these values can be used as non-type template
+// parameters as well as ordinary values
+enum class Lsb : Index {kMin = 0};
+enum class Msb : Index {kMin = 0};
+enum class Width : Index {kMin = 0};
 
 // For all bitmask() functions the MSB and LSB are included in the mask
 // For example: bitmask<uint8_t>(Lsb{0}, Msb{7}) == 0xFF
 
 template<typename T>
 constexpr T bitmask(Lsb lsb) {
-    return static_cast<T>(static_cast<T>(~0) << lsb.as_index);
+    return static_cast<T>(static_cast<T>(~0) << static_cast<Index>(lsb));
 }
 
 template<typename T>
 constexpr T bitmask(Msb msb) {
     return static_cast<T>(static_cast<T>(~0) >>
-            (bitsize<T>() - msb.as_index - 1));
+            (bitsize<T>() - static_cast<Index>(msb) - 1));
 }
 
 template<typename T>
@@ -40,19 +42,19 @@ constexpr T bitmask(Lsb lsb, Msb msb) {
 
 template<typename T>
 constexpr T bitmask(Msb msb, Width width) {
-    if (0 == width.as_index) {
+    if (0 == static_cast<Index>(width)) {
         return 0;
     } else {
-        return bitmask<T>(msb, Lsb{msb.as_index - width.as_index + 1});
+        return bitmask<T>(msb, Lsb{static_cast<Index>(msb) - static_cast<Index>(width) + 1});
     }
 }
 
 template<typename T>
 constexpr T bitmask(Lsb lsb, Width width) {
-    if (0 == width.as_index) {
+    if (0 == static_cast<Index>(width)) {
         return 0;
     } else {
-        return bitmask<T>(lsb, Msb{lsb.as_index + width.as_index - 1});
+        return bitmask<T>(lsb, Msb{static_cast<Index>(lsb) + static_cast<Index>(width) - 1});
     }
 }
 
