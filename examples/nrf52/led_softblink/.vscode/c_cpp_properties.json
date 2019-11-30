@@ -1,30 +1,47 @@
 {
-    "env": {},
+    "env": {
+        "commonDefines": [
+            "APP_TIMER_V2",
+            "APP_TIMER_V2_RTC1_ENABLED",
+            "CONFIG_GPIO_AS_PINRESET",
+            "ESTOPPEL=1",
+            "ESTP=1",
+            "ESTP_DEVICE=1",
+            "ESTP_LINK=1",
+            "ESTP_PLATFORM=1",
+            "FLOAT_ABI_HARD",
+            "NRF52",
+            "NRF52832_XXAA",
+            "NRF52_PAN_74",
+            "__HEAP_SIZE=8192",
+            "__STACK_SIZE=8192"
+        ]
+    },
     "configurations": [
         {
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "defines": [],
+            "defines": ["${commonDefines}"],
             "macFrameworkPath": [],
             "compilerPath": "${workspaceFolder}/estoppel/third_party/gcc-arm-none-eabi/darwin/latest/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x86",
-            "compileCommands": "${workspaceFolder}/BUILD/compile_commands.json"
+            "forcedInclude": ["${workspaceFolder}/.vscode/c_cpp_undef.h"]
         },
         {
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "defines": [],
+            "defines": ["${commonDefines}"],
             "compilerPath": "${workspaceFolder}/estoppel/third_party/gcc-arm-none-eabi/linux/latest/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x86",
-            "compileCommands": "${workspaceFolder}/BUILD/compile_commands.json"
+            "forcedInclude": ["${workspaceFolder}/.vscode/c_cpp_undef.h"]
         }
     ],
     "version": 4
