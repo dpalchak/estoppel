@@ -116,6 +116,7 @@ function(_add_estp_bin_output TARGET_NAME)
     set(BIN_FILE_NAME "${TARGET_NAME}.bin")
     add_custom_command(
         TARGET ${TARGET_NAME}
+        POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE_NAME:${TARGET_NAME}> ${BIN_FILE_NAME}
         COMMAND chmod -x ${BIN_FILE_NAME}
         DEPENDS ${TARGET_NAME}
@@ -128,6 +129,7 @@ function(_add_estp_hex_output TARGET_NAME)
     set(HEX_FILE_NAME "${TARGET_NAME}.hex")
     add_custom_command(
         TARGET ${TARGET_NAME}
+        POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE_NAME:${TARGET_NAME}> ${HEX_FILE_NAME}
         DEPENDS ${TARGET_NAME}
         COMMENT "Create ihex image: ${HEX_FILE_NAME}"
