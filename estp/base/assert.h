@@ -2,7 +2,6 @@
 
 #include "estp/base/macros.h"
 #include "estp/base/types.h"
-#include "estp/data/meta_string.h"
 
 namespace estp {
 
@@ -27,7 +26,7 @@ void HandleFailedAssertion(AssertionContext failure);
 
 #ifdef ESTOPPEL
 #ifndef ESTP_ASSERT_BASE_NAME
-#define ESTP_ASSERT_BASE_NAME 1
+#define ESTP_ASSERT_BASE_NAME 0
 #endif
 #endif
 
@@ -36,6 +35,11 @@ void HandleFailedAssertion(AssertionContext failure);
 #  define ASSERT_FILENAME ::estp::RGet<0>(::estp::Split<'/'>(MAKE_METASTRING_256(FILE_NAME)))
 #else
 #  define ASSERT_FILENAME FILE_NAME
+#endif
+
+#ifdef ASSERT
+#undef ASSERT
+COMPILE_MESSAGE("Redefining ASSERT()...")
 #endif
 
 #define ASSERT(...)                                                                   \

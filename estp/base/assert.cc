@@ -2,15 +2,29 @@
 #include "estp/base/assert.h"
 #include "estp/base/macros.h"
 
+#ifdef ESTP_HOST
+#include <exception>
+#endif
+
 namespace estp {
 
 static AssertionHandler user_assertion_handler{nullptr};
+
+#ifdef ESTP_HOST
+
+void DefaultAssertionHandler(AssertionContext const &) {
+	std::terminate();
+}
+
+#else
 
 // This is a weak symbol so that it can be replaced at link time
 // if desired
 WEAK void DefaultAssertionHandler(AssertionContext const &) {
 	for(;;) {}
 }
+
+#endif
 
 AssertionHandler SetAssertionHandler(AssertionHandler handler) {
 	auto old_handler = user_assertion_handler;
