@@ -24,7 +24,7 @@ target_include_directories(estp_build INTERFACE
 )
 
 add_estp_executable(spi_master
-    main.c
+    main.cc
     ${NRF5_SDK_ROOT}/components/boards/boards.c
     # ${NRF5_SDK_ROOT}/components/drivers_nrf/nrf_soc_nosd/nrf_nvic.c
     ${NRF5_SDK_ROOT}/components/drivers_nrf/nrf_soc_nosd/nrf_soc.c

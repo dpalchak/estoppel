@@ -50,18 +50,22 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
+#include "estp/data/color.h"
+#include "estp/data/span.h"
+#include "estp/driver/apa102.h"
+
 #define SPI_INSTANCE 0                                               /**< SPI instance index. */
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE); /**< SPI instance. */
 static volatile bool spi_xfer_done; /**< Flag used to indicate that SPI instance
                                                                            completed
                                        the transfer. */
-
+#if 0
 static uint8_t header[] = {0, 0, 0, 0};
 static uint8_t blue[] = {0xE3, 0xFF, 0x00, 0x00};
 static uint8_t green[] = {0xE1, 0x00, 0x7F, 0x00};
 static uint8_t red[] = {0xE1, 0x00, 0x00, 0xFF};
 static uint8_t off[] = {0xE0, 0, 0, 0};
-
+#endif
 /**
  * @brief SPI user event handler.
  * @param event
@@ -77,6 +81,25 @@ void spi_event_handler(nrf_drv_spi_evt_t const* p_event, void* p_context) {
     }
 #endif
 }
+
+constexpr auto kLedCount = 64;
+estp::Apa102 leds[kLedCount];
+
+void redraw() {
+    static uint8_t buf[4];
+
+    std::memcpy(buf, estp::Apa102::kLeader, 4);
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
+
+    for(auto& led : leds) {
+        led.SerializeInto(estp::Span{buf,4});
+        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
+    }
+
+    std::memcpy(buf, estp::Apa102::kTrailer, 4);
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
+}
+
 
 int main(void) {
     bsp_board_init(BSP_INIT_LEDS);
@@ -95,33 +118,51 @@ int main(void) {
 
     NRF_LOG_INFO("SPI example started.");
 
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, header, 4, NULL, 0));
-
+    uint8_t buf[4];
+    std::memcpy(buf, estp::Apa102::kLeader,4);
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
+    estp::Apa102::kOff.SerializeInto(estp::Span{buf,4});
     for (int i = 0; i < 65; i++) {
-        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, off, 4, NULL, 0));
+        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
     }
+    std::memcpy(buf, estp::Apa102::kTrailer,4);
+    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
 
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, header, 4, NULL, 0));
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, green, 4, NULL, 0));
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, blue, 4, NULL, 0));
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, red, 4, NULL, 0));
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, off, 4, NULL, 0));
+    //leds[0] = estp::RgbColor8::kWhite;
+    leds[1] = estp::RgbColor8{0,0,32};
+    leds[2] = estp::RgbColor8{0,16,16};
+    leds[3] = estp::RgbColor8{0,16,0};
+    leds[4] = estp::RgbColor8{16,16,0};
+    leds[5] = estp::RgbColor8{16,0,0};
+    leds[6] = estp::RgbColor8{16,0,32};
+    //leds[7] = estp::RgbColor8::kWhite;
 
+    constexpr uint32_t kDelayMs = 50;
     for (;;) {
-        for (int j = 0; j < 65; j++) {
-            APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, header, 4, NULL, 0));
-            for (int i = 0; i < j; i++) {
-                APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, off, 4, NULL, 0));
+        NRF_LOG_INFO("====== Cycle ======");
+        for(unsigned scale=0; scale<32; scale++) {
+            for(auto& led : leds) {
+                led.SetScale(scale);
             }
-            APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, green, 4, NULL, 0));
-            APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, blue, 4, NULL, 0));
-            APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, red, 4, NULL, 0));
-            APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, off, 4, NULL, 0));
-
-            NRF_LOG_FLUSH();
-
+            redraw();
             bsp_board_led_invert(BSP_BOARD_LED_0);
-            nrf_delay_ms(80);
+            NRF_LOG_INFO("Scale: 0x%02X", scale);
+            uint8_t check = *reinterpret_cast<uint8_t *>(&leds[4]);
+            NRF_LOG_INFO("LED control: 0x%02X", check);
+            NRF_LOG_FLUSH();
+            nrf_delay_ms(kDelayMs);
+        }
+        for(unsigned scale=30; scale!=(0u-1u); scale--) {
+            for(auto& led : leds) {
+                led.SetScale(scale);
+            }
+            redraw();
+            bsp_board_led_invert(BSP_BOARD_LED_0);
+            NRF_LOG_INFO("Scale: 0x%02X", scale);
+            uint8_t check = *reinterpret_cast<uint8_t *>(&leds[4]);
+            NRF_LOG_INFO("LED control: 0x%02X", check);
+            nrf_delay_ms(kDelayMs);
+            NRF_LOG_FLUSH();
         }
     }
 }
