@@ -11,6 +11,7 @@ namespace estp {
 // Undefined overflow/underflow behavior can be eliminated using the
 // '-fwrapv' flag with GCC/Clang
 using Index = std::ptrdiff_t;
+using Size = Index;
 
 // A convenience typedef for readability
 template<auto N>
