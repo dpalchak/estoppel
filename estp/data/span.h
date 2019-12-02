@@ -1,5 +1,6 @@
 #pragma once
 
+#include "estp/base/assert.h"
 #include "estp/base/casting.h"
 #include "estp/base/meta.h"
 #include "estp/base/types.h"
@@ -162,6 +163,10 @@ public:
 
     constexpr operator View() const {
         return View{View::kPrivate, ConstPointer{_begin}, _size};
+    }
+
+    constexpr View view() const {
+        return static_cast<View>(*this);
     }
 
 private:
