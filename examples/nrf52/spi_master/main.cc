@@ -59,13 +59,7 @@ static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE); /**< SPI in
 static volatile bool spi_xfer_done; /**< Flag used to indicate that SPI instance
                                                                            completed
                                        the transfer. */
-#if 0
-static uint8_t header[] = {0, 0, 0, 0};
-static uint8_t blue[] = {0xE3, 0xFF, 0x00, 0x00};
-static uint8_t green[] = {0xE1, 0x00, 0x7F, 0x00};
-static uint8_t red[] = {0xE1, 0x00, 0x00, 0xFF};
-static uint8_t off[] = {0xE0, 0, 0, 0};
-#endif
+
 /**
  * @brief SPI user event handler.
  * @param event
@@ -82,8 +76,66 @@ void spi_event_handler(nrf_drv_spi_evt_t const* p_event, void* p_context) {
 #endif
 }
 
-constexpr auto kLedCount = 64;
-estp::Apa102 leds[kLedCount];
+using namespace estp;
+
+constexpr Index kLedRows = 8;
+constexpr Index kLedCols = 8;
+constexpr Index kLedCount = kLedRows * kLedCols;
+
+Apa102 leds[kLedRows][kLedCols];
+
+constexpr Index kPaletteSize = 6;
+constexpr RgbColor8 kPalette[kPaletteSize] = {
+    {0,0,32},
+    {0,16,16},
+    {0,16,0},
+    {16,16,0},
+    {16,0,0},
+    {16,0,32}
+};
+
+RgbColor8 const& NextColor() {
+    static Index index = 0;
+    auto curr = index;
+    NRF_LOG_INFO("Color index %i", index);
+    if(++index == kPaletteSize) {
+        index = 0;
+    }
+    return kPalette[curr];
+}
+
+struct Coordinate {
+    Index row{0};
+    Index col{0};
+};
+
+Coordinate NextPerimeterCoord(Coordinate const current) {
+    constexpr auto kLastCol = kLedCols - 1;
+    constexpr auto kLastRow = kLedRows - 1;
+
+    if (0 == current.row) {
+        if (current.col > 0) {
+            return {0, current.col-1};
+        }
+    }
+    if (kLastRow == current.row) {
+        if (current.col != kLastCol) {
+            return {kLastRow, current.col+1};
+        }
+    }
+    if (0 == current.col) {
+        if (current.row < kLastRow) {
+            return {current.row+1, 0};
+        }
+    }
+    if (kLastCol == current.col) {
+        if (current.row > 0) {
+            return {current.row-1, kLastCol};
+        }
+    }
+    ASSERT(false);
+    return {0,0};
+}
 
 void redraw() {
     static uint8_t buf[4];
@@ -91,9 +143,9 @@ void redraw() {
     std::memcpy(buf, estp::Apa102::kLeader, 4);
     APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
 
-    for(auto& led : leds) {
-        led.SerializeInto(estp::Span{buf,4});
-        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
+    for(int r=0; r<kLedRows; r++) {
+        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, reinterpret_cast<uint8_t*>(&leds[r][0]),
+            sizeof(Apa102)*kLedCols, NULL, 0));
     }
 
     std::memcpy(buf, estp::Apa102::kTrailer, 4);
@@ -112,57 +164,32 @@ int main(void) {
     spi_config.miso_pin = NRF_DRV_SPI_PIN_NOT_USED;  // SPI_MISO_PIN;
     spi_config.mosi_pin = 22;                        // SPI_MOSI_PIN;
     spi_config.sck_pin = 16;                         // SPI_SCK_PIN;
-    // APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler,
-    // NULL));
+
+    // APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, spi_event_handler, NULL));
     APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, NULL, NULL));
 
     NRF_LOG_INFO("SPI example started.");
-
-    uint8_t buf[4];
-    std::memcpy(buf, estp::Apa102::kLeader,4);
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
-    estp::Apa102::kOff.SerializeInto(estp::Span{buf,4});
-    for (int i = 0; i < 65; i++) {
-        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
-    }
-    std::memcpy(buf, estp::Apa102::kTrailer,4);
-    APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, buf, 4, NULL, 0));
-
-    //leds[0] = estp::RgbColor8::kWhite;
-    leds[1] = estp::RgbColor8{0,0,32};
-    leds[2] = estp::RgbColor8{0,16,16};
-    leds[3] = estp::RgbColor8{0,16,0};
-    leds[4] = estp::RgbColor8{16,16,0};
-    leds[5] = estp::RgbColor8{16,0,0};
-    leds[6] = estp::RgbColor8{16,0,32};
-    //leds[7] = estp::RgbColor8::kWhite;
+    redraw();
 
     constexpr uint32_t kDelayMs = 50;
+    auto color = NextColor();
+    Coordinate head{0,0};
+    for(int i=0; i<12; i++) {
+        // Give head a "head" start....
+        head = NextPerimeterCoord(head);
+    }
+    Coordinate tail{0,0};
     for (;;) {
-        NRF_LOG_INFO("====== Cycle ======");
-        for(unsigned scale=0; scale<32; scale++) {
-            for(auto& led : leds) {
-                led.SetScale(scale);
-            }
-            redraw();
-            bsp_board_led_invert(BSP_BOARD_LED_0);
-            NRF_LOG_INFO("Scale: 0x%02X", scale);
-            uint8_t check = *reinterpret_cast<uint8_t *>(&leds[4]);
-            NRF_LOG_INFO("LED control: 0x%02X", check);
-            NRF_LOG_FLUSH();
-            nrf_delay_ms(kDelayMs);
+        NRF_LOG_INFO("(%i, %i) ", head.row, head.col);
+        if ((0 == head.row) && (0 == head.col)) {
+            color = NextColor();
         }
-        for(unsigned scale=30; scale!=(0u-1u); scale--) {
-            for(auto& led : leds) {
-                led.SetScale(scale);
-            }
-            redraw();
-            bsp_board_led_invert(BSP_BOARD_LED_0);
-            NRF_LOG_INFO("Scale: 0x%02X", scale);
-            uint8_t check = *reinterpret_cast<uint8_t *>(&leds[4]);
-            NRF_LOG_INFO("LED control: 0x%02X", check);
-            nrf_delay_ms(kDelayMs);
-            NRF_LOG_FLUSH();
-        }
+        NRF_LOG_FLUSH();
+        leds[head.row][head.col].SetScale(8).SetColor(color);
+        leds[tail.row][tail.col].SetOff();
+        redraw();
+        nrf_delay_ms(kDelayMs);
+        head = NextPerimeterCoord(head);
+        tail = NextPerimeterCoord(tail);
     }
 }
