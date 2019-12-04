@@ -7,7 +7,6 @@
 #include <type_traits>
 #include <utility>
 
-
 namespace estp {
 
 // Metaprogramming functions
@@ -206,67 +205,22 @@ struct MethodTraits<R(C::*)(A...) const, void> {
 template<typename SIG, typename C=void>
 using MethodPointer = typename MethodTraits<SIG,C>::PointerType;
 
-// Shortcuts for integral constants and native types
-template<char V>
-struct CharConstant : public std::integral_constant<char, V> {};
+// Useful functions for working with Index sequences
+template<Index... Is>
+using IndexSequence = std::integer_sequence<Index, Is...>;
 
-template<int V>
-struct IntConstant : public std::integral_constant<int, V> {};
+template<Index N>
+using MakeIndexSequence = std::make_integer_sequence<Index, N>;
 
-template<unsigned V>
-struct UnsignedConstant : public std::integral_constant<unsigned, V> {};
+template<typename... T>
+using IndexSequenceFor = MakeIndexSequence<sizeof...(T)>;
 
-template<Index V>
-struct IndexConstant : public std::integral_constant<Index, V> {};
-
-template<std::uint8_t V>
-struct Uint8Constant : public std::integral_constant<std::uint8_t, V> {};
-
-template<std::uint16_t V>
-struct Uint16Constant : public std::integral_constant<std::uint16_t, V> {};
-
-template<std::uint32_t V>
-struct Uint32Constant : public std::integral_constant<std::uint32_t, V> {};
-
-template<std::uint64_t V>
-struct Uint64Constant : public std::integral_constant<std::uint64_t, V> {};
-
-template<std::int8_t V>
-struct Int8Constant : public std::integral_constant<std::int8_t, V> {};
-
-template<std::int16_t V>
-struct Int16Constant : public std::integral_constant<std::int16_t, V> {};
-
-template<std::int32_t V>
-struct Int32Constant : public std::integral_constant<std::int32_t, V> {};
-
-template<std::int64_t V>
-struct Int64Constant : public std::integral_constant<std::int64_t, V> {};
-
-// Useful functions for working with index sequences
-template <std::size_t Offset, std::size_t ... Indices>
-constexpr auto AddOffsetToSequence(std::index_sequence<Indices...>) -> std::index_sequence<(Indices+Offset)...> {
+template<Index Offset, Index... Is>
+constexpr auto AddOffsetToIndexSequence(IndexSequence<Is...>) -> IndexSequence<(Offset+Is)...> {
     return {};
 }
 
-template <std::size_t Offset, std::size_t N>
-struct MakeOffsetIndexSequence : public decltype(AddOffsetToSequence<Offset>(std::make_index_sequence<N>{})) {};
-
-template <std::size_t Offset, std::size_t ... Indices>
-constexpr auto SubtractOffsetFromSequence(std::index_sequence<Indices...>) -> std::index_sequence<(Indices-Offset)...> {
-    return {};
-}
-
-template <std::size_t Offset, std::size_t N>
-struct MakeNegativeOffsetIndexSequence : public decltype(SubtractOffsetFromSequence<Offset>(std::make_index_sequence<N>{})) {};
-
-template <std::size_t Offset, std::size_t ... Indices>
-constexpr auto SubtractSequenceFromOffset(std::index_sequence<Indices...>) -> std::index_sequence<(Offset-Indices)...> {
-    return {};
-}
-
-template <std::size_t N>
-struct MakeReverseIndexSequence : public decltype(SubtractSequenceFromOffset<N-1>(std::make_index_sequence<N>{})) {};
-
+template <Index Offset, Index N>
+using MakeOffsetIndexSequence = decltype(AddOffsetToIndexSequence<Offset>(MakeIndexSequence<N>{}));
 
 } // namespace estp
