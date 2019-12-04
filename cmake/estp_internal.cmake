@@ -47,7 +47,13 @@ function(_add_estp_build_library)
         set(PLAT "DEVICE")
     else()
         set(PLAT "HOST")
+        if(TOOL MATCHES "APPLECLANG")
+            # Treat APPLECLANG and CLANG as the same on host platforms
+            set(TOOL "CLANG")
+        endif()
     endif()
+
+
 
     target_compile_options(estp_build INTERFACE
         ${ESTP_WARNINGS}
