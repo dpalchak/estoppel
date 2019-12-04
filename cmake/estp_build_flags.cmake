@@ -122,6 +122,7 @@ set(ESTP_CLANG_HOST_WARNINGS
     "-Wno-reserved-id-macro"        # CppUTest: allow macros for reserved IDs
     "-Wno-disabled-macro-expansion" # CppUTest: nested macros
     "-Wno-missing-braces"           # Disable Clang's overzealous missing-braces warnings
+    "-Wno-gnu-string-literal-operator-template" # TypeString string literal operator templates use a GNU extension
 )
 
 set(ESTP_CLANG_HOST_COMMON_FLAGS
