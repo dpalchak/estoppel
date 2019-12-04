@@ -1,4 +1,4 @@
-#undef ESTP_ASSERT_FULL_NAME
+#define ESTP_ASSERT_BASENAME 1
 
 #include "estp/base/assert.h"
 #include "catch2/catch.hpp"
@@ -53,7 +53,7 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 		ASSERT(false);
 
 		REQUIRE(string(last_assertion.condition) == "false");
-		REQUIRE(string(last_assertion.filename) == __FILE__);
+		REQUIRE(string(last_assertion.filename) == "assert_test.cc");
 		REQUIRE(line+1 == last_assertion.line);
 	}
 
@@ -62,7 +62,7 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 		ASSERT(0 == 1);
 
 		REQUIRE(string(last_assertion.condition) == "0 == 1");
-		REQUIRE(string(last_assertion.filename) == __FILE__);
+		REQUIRE(string(last_assertion.filename) == "assert_test.cc");
 		REQUIRE(line+1 == last_assertion.line);
 	}
 
@@ -71,7 +71,7 @@ TEST_CASE( "Assertions handled by user-assigned handler" ) {
 		ASSERT(((void)3,4) == 2);
 
 		REQUIRE(string(last_assertion.condition) == "((void)3,4) == 2");
-		REQUIRE(string(last_assertion.filename) == __FILE__);
+		REQUIRE(string(last_assertion.filename) == "assert_test.cc");
 		REQUIRE(line+1 == last_assertion.line);
 	}
 }

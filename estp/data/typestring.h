@@ -3,6 +3,8 @@
 #include "estp/base/meta.h"
 #include "estp/base/types.h"
 
+#include <array>
+
 namespace estp {
 
 template<char... Chars>
@@ -11,22 +13,18 @@ struct TypeString  {
     constexpr static Index kLength {sizeof...(Chars)};
 
     // Include a null terminator for compatibility with normal string-handling functions
-    constexpr static char const kValue[sizeof...(Chars)+1] { Chars..., '\0'};
+    constexpr static std::array<char const, sizeof...(Chars)+1> kValue = {Chars..., '\0'};
 
     constexpr static CZString cbegin() {
-    	return &kValue[0];
+        return kValue.cbegin();
     }
 
     constexpr static CZString cend() {
-    	return &kValue[kLength];
-    }
-
-    constexpr static CZString cstr() {
-        return cbegin();
+        return kValue.cend();
     }
 
     constexpr static CZString data() {
-        return cbegin();
+        return kValue.data();
     }
 
     constexpr static Index size() {
@@ -34,12 +32,11 @@ struct TypeString  {
     }
 
     constexpr static char at(Index i) {
-        return kValue[i];
+        // Use direct indexing instead of the .at() method to avoid compiler warning about
+        // signed vs unsigned value (Our Index type is signed)
+        return data()[i];
     }
 };
-
-template<char... C>
-constexpr char const TypeString<C...>::kValue[sizeof...(C)+1];
 
 constexpr TypeString<> kEmptyTypeString{};
 
