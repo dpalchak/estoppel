@@ -6,7 +6,6 @@ if(ESTP_HOST_PLATFORM)
         accumulator_test.cc
         bitfield_test.cc
         final_action_test.cc
-        #meta_list_test.cc
         typestring_test.cc
         not_null_test.cc
         span_test.cc
