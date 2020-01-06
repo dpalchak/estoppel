@@ -44,6 +44,8 @@ target_include_directories(nrf52832_xxaa_platform_build INTERFACE
     ${NRF5_SDK_ROOT}/components/libraries/log/src
     ${NRF5_SDK_ROOT}/components/libraries/low_power_pwm
     ${NRF5_SDK_ROOT}/components/libraries/memobj
+    ${NRF5_SDK_ROOT}/components/libraries/mutex
+    ${NRF5_SDK_ROOT}/components/libraries/pwr_mgmt
     ${NRF5_SDK_ROOT}/components/libraries/ringbuf
     ${NRF5_SDK_ROOT}/components/libraries/scheduler
     ${NRF5_SDK_ROOT}/components/libraries/sortlist
