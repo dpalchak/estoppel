@@ -35,7 +35,7 @@ set(ESTP_GNU_DEVICE_WARNINGS
     "-Wundef"                  # no evaluation of undefined identifiers in #if
     "-Wswitch-enum"            # each enum value must appear in switch
     "-Wswitch-default"         # switch must have default
-    "-Wsign-conversion"        # no implicit signedness conversions
+    #"-Wsign-conversion"       # no implicit signedness conversions -- this is disabled due to GCC bug 87519
     "-Wdouble-promotion"       # no automatic promotion to double
     "-Wconversion"             # check if conversion might affect value
     "-Winit-self"              # no self-initialization
@@ -81,6 +81,7 @@ set(ESTP_GNU_DEVICE_LINK_FLAGS
     "-fno-unwind-tables"       # omit unwind tables
     "-fshort-enums"            # allow enum types to be smallest possible type
     "-Wl,--gc-sections"        # elide unused sections (functions and vars)
+    "-std=gnu++17"
 )
 
 set(ESTP_GNU_DEVICE_ASM_FLAGS
