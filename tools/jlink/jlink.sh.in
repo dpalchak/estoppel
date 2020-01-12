@@ -5,6 +5,7 @@
 
 jlink_commander=$(realpath "@JLINK_COMMANDER_EXE@")
 jlink_gdbserver=$(realpath "@JLINK_GDBSERVER_EXE@")
+jlink_rttclient=$(realpath "@JLINK_RTTCLIENT_EXE@")
 jlink_device=@JLINK_DEVICE@
 jlink_interface=@JLINK_INTERFACE@
 jlink_speed=@JLINK_SPEED@
@@ -28,6 +29,8 @@ jlink_gdbserver_args="-select USB -device $jlink_device -endian little "\
 "-if $jlink_interface -speed $jlink_speed -ir -noLocalhostOnly"
 
 jlink_gdbserver_cmdline="$jlink_gdbserver $jlink_gdbserver_args"
+
+jlink_rttclient_cmdline="$jlink_rttclient"
 
 cmd_help(){
     echo "Usage: $script_name <subcommand> [options]"
@@ -58,6 +61,14 @@ cmd_load(){
 
 cmd_gdbserver(){
     $jlink_gdbserver_cmdline &
+}
+
+cmd_killserver(){
+    killall $(basename $jlink_gdbserver)
+}
+
+cmd_rttclient(){
+    $jlink_rttclient_cmdline
 }
 
 subcommand=$1

@@ -31,6 +31,10 @@ function(add_estp_jlink_targets EXE_TARGET)
         "${ESTP_ROOT}/third_party/segger/jlink/${HOST_SYSTEM_NAME}/latest/JLinkGDBServer"
     )
 
+    set(JLINK_RTTCLIENT_EXE
+        "${ESTP_ROOT}/third_party/segger/jlink/${HOST_SYSTEM_NAME}/latest/JLinkRTTClientExe"
+    )
+
     set(PLATFORM_SOURCES_LIB "${ESTP_PLATFORM}_platform_sources")
     get_target_property(JLINK_DEVICE ${PLATFORM_SOURCES_LIB} JLINK_DEVICE)
     if(JLINK_DEVICE MATCHES "NOTFOUND")
