@@ -30,7 +30,7 @@ add_estp_library(estp_base STATIC
 #     )
 # endforeach()
 
-if(ESTP_HOST_PLATFORM)
+if(ESTP_BUILD_TESTING)
     add_estp_unit_test(estp_base_tests
         assert_test.cc
         bits_test.cc
