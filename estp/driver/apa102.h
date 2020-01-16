@@ -84,12 +84,12 @@ public:
         return SetScale(0);
     }
 
-    inline void SerializeInto(Span<uint8_t> dest) const {
+    inline void Serialize(Span<uint8_t> dest) const {
         EXPECTS(dest.size() >= 4);
         std::memcpy(dest.data(), this, 4);
     }
 
-    inline void SerializeInto(Accumulator<uint8_t> &dest) const {
+    inline void Serialize(Accumulator<uint8_t> &dest) const {
         EXPECTS(dest.empty_size() >= 4);
         dest.PushBack(_control);
         dest.PushBack(_blue);
@@ -99,6 +99,16 @@ public:
 
     inline Span<uint8_t const> as_span() const {
         return {reinterpret_cast<uint8_t const*>(this), 4};
+    }
+
+    static inline void SerializeLeader(Span<uint8_t> dest) {
+        EXPECTS(dest.size() >= 4);
+        std::memcpy(dest.data(), kLeader, sizeof(kLeader));
+    }
+
+    static inline void SerializeTrailer(Span<uint8_t> dest) {
+        EXPECTS(dest.size() >= 4);
+        std::memcpy(dest.data(), kTrailer, sizeof(kTrailer));
     }
 
 private:
