@@ -53,7 +53,7 @@ function(add_estp_jlink_targets EXE_TARGET)
 
     message(STATUS "Adding J-Link targets for '${EXE_TARGET}'")
     set(WRAPPER_SCRIPT_TEMPLATE "${ESTP_ROOT}/tools/jlink/jlink.sh.in")
-    set(WRAPPER_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/jlink.sh")
+    set(WRAPPER_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/jlink_${EXE_TARGET}.sh")
 
     configure_file(
         "${WRAPPER_SCRIPT_TEMPLATE}"
@@ -66,7 +66,8 @@ function(add_estp_jlink_targets EXE_TARGET)
     )
 
     foreach(CMD reset erase load)
-        add_custom_target(${CMD} ${WRAPPER_SCRIPT} ${CMD} USES_TERMINAL)
-        add_dependencies(${CMD} ${EXE_TARGET})
+        set(CMD_TARGET "${CMD}_${EXE_TARGET}")
+        add_custom_target(${CMD_TARGET} ${WRAPPER_SCRIPT} ${CMD} USES_TERMINAL)
+        add_dependencies(${CMD_TARGET} ${EXE_TARGET})
     endforeach()
 endfunction(add_estp_jlink_targets)

@@ -26,7 +26,7 @@ jlink_commander_args="-Device $jlink_device -If $jlink_interface -Speed $jlink_s
 jlink_commander_cmdline="$jlink_commander $jlink_commander_args"
 
 jlink_gdbserver_args="-select USB -device $jlink_device -endian little "\
-"-if $jlink_interface -speed $jlink_speed -ir -noLocalhostOnly"
+"-if $jlink_interface -speed $jlink_speed -ir -noLocalhostOnly -nohalt"
 
 jlink_gdbserver_cmdline="$jlink_gdbserver $jlink_gdbserver_args"
 
