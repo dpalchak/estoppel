@@ -1,7 +1,7 @@
 #pragma once
 
-#include "estp/base/macros.h"
-#include "estp/base/types.h"
+#include "estp/base/macros.hh"
+#include "estp/base/types.hh"
 
 #include <type_traits>
 #include <utility>

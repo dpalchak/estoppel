@@ -1,7 +1,7 @@
 #pragma once
 
-#include "estp/base/types.h"
-#include "estp/base/meta.h"
+#include "estp/base/types.hh"
+#include "estp/base/meta.hh"
 
 namespace estp {
 

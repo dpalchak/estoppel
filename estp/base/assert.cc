@@ -1,6 +1,6 @@
 
-#include "estp/base/assert.h"
-#include "estp/base/macros.h"
+#include "estp/base/assert.hh"
+#include "estp/base/macros.hh"
 
 #ifdef ESTP_HOST
 #include <exception>

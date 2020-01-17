@@ -1,6 +1,6 @@
 #define ESTP_ASSERT_BASENAME 1
 
-#include "estp/base/assert.h"
+#include "estp/base/assert.hh"
 #include "catch2/catch.hpp"
 
 #include <iostream>

@@ -1,4 +1,4 @@
-#include "estp/data/bitfield.h"
+#include "estp/data/bitfield.hh"
 
 #include "catch2/catch.hpp"
 

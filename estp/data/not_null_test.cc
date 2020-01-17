@@ -1,6 +1,6 @@
-#include "estp/base/assert.h"
-#include "estp/base/types.h"
-#include "estp/data/not_null.h"
+#include "estp/base/assert.hh"
+#include "estp/base/types.hh"
+#include "estp/data/not_null.hh"
 
 #include "catch2/catch.hpp"
 

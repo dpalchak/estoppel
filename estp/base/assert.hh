@@ -1,11 +1,11 @@
 #pragma once
 
-#include "estp/base/macros.h"
-#include "estp/base/types.h"
+#include "estp/base/macros.hh"
+#include "estp/base/types.hh"
 
 #ifndef ASSERT_FILENAME
 #  ifdef ESTP_ASSERT_BASENAME
-#    include "estp/data/typestring.h"
+#    include "estp/data/typestring.hh"
 using namespace ::estp::literals;
 namespace estp {
 

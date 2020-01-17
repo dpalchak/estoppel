@@ -1,6 +1,6 @@
 
-#include "estp/base/bits.h"
-#include "estp/base/types.h"
+#include "estp/base/bits.hh"
+#include "estp/base/types.hh"
 #include "catch2/catch.hpp"
 
 #include <iostream>

@@ -1,6 +1,6 @@
 
-#include "estp/data/typestring.h"
-#include "estp/base/macros.h"
+#include "estp/data/typestring.hh"
+#include "estp/base/macros.hh"
 #include "catch2/catch.hpp"
 
 // TypeStrings are actually types not values so manipulation of them

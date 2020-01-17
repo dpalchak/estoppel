@@ -50,9 +50,9 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-#include "estp/data/color.h"
-#include "estp/data/span.h"
-#include "estp/driver/apa102.h"
+#include "estp/data/color.hh"
+#include "estp/data/span.hh"
+#include "estp/driver/apa102.hh"
 
 #define SPI_INSTANCE 0                                               /**< SPI instance index. */
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(SPI_INSTANCE); /**< SPI instance. */

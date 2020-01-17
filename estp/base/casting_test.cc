@@ -1,6 +1,6 @@
-#include "estp/base/assert.h"
-#include "estp/base/casting.h"
-#include "estp/base/types.h"
+#include "estp/base/assert.hh"
+#include "estp/base/casting.hh"
+#include "estp/base/types.hh"
 #include "catch2/catch.hpp"
 
 #include <iostream>

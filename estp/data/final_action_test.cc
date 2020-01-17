@@ -1,4 +1,4 @@
-#include "estp/data/final_action.h"
+#include "estp/data/final_action.hh"
 #include "catch2/catch.hpp"
 
 #include <iostream>

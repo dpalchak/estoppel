@@ -1,4 +1,4 @@
-#include "estp/data/accumulator.h"
+#include "estp/data/accumulator.hh"
 
 #include "catch2/catch.hpp"
 

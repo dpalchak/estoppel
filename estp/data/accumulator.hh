@@ -1,9 +1,9 @@
 #pragma once
 
-#include "estp/base/assert.h"
-#include "estp/base/macros.h"
-#include "estp/base/types.h"
-#include "estp/data/span.h"
+#include "estp/base/assert.hh"
+#include "estp/base/macros.hh"
+#include "estp/base/types.hh"
+#include "estp/data/span.hh"
 
 #include <cstdint>
 #include <type_traits>
