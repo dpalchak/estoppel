@@ -6,6 +6,7 @@ if(ESTP_BUILD_TESTING)
         accumulator_test.cc
         bitfield_test.cc
         final_action_test.cc
+        flags_test.cc
         typestring_test.cc
         not_null_test.cc
         span_test.cc
