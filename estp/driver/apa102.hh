@@ -28,6 +28,10 @@ public:
             _scale = scale;
     }
 
+    constexpr Apa102& Reset() {
+        return SetColor(RgbColor8::kBlack).SetOff();
+    }
+
     constexpr Apa102& SetColor(RgbColor8 rgb) {
         _blue = rgb.blue;
         _green = rgb.green;
