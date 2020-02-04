@@ -4,6 +4,7 @@ Estoppel TODO list and idea board
 - Create blinky app for STM32L4
 - Migrate data structures
 - Write test cases for data structures
+- Create I/O abstraction
 
 
 ## Desired C++17 Features
@@ -24,7 +25,7 @@ Estoppel TODO list and idea board
 - std::error_code (<https://en.cppreference.com/w/cpp/error/error_code)>
 - std::void_t<...> for expression SFINAE
 - Add class template argument deduction helpers
-- Use std::span instead of custom ArrayRef
+- Switch to std::span (<https://github.com/tcbrindle/span>)
 
 
 ## Misc improvements
@@ -90,6 +91,36 @@ Estoppel TODO list and idea board
 - Initialization control via HSM
 
 ## Code Ideas
+### Configuration
+Use template global variables to define an option and its default value
+Use explicit instantiation to set the value for a given platform or application
+
+Example:
+driver.hh
+```c++
+namespace config {
+
+template<typename APP>
+constexpr int32_t kDriverBufferSize = 2048;
+
+}
+
+static byte buffer[::config::kDriverBufferSize<Application>];
+```
+
+application.hh
+```c++
+struct FizzBuzz {};
+
+namespace config {
+using Application = ::FizzBuzz;
+
+template<>
+constexpr int32_t kDriverBufferSize<::FizzBuzz> = 512;
+
+}
+```
+
 ### Events
 Event Queue:
 - provides simple insertion/removal at front or back
