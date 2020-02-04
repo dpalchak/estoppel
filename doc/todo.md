@@ -5,6 +5,8 @@ Estoppel TODO list and idea board
 - Migrate data structures
 - Write test cases for data structures
 - Create I/O abstraction
+- Add C++17 delegates (see (<https://skypjack.github.io/2019-01-25-delegate-revised/>)
+- Evaluate std::inplace_function (<https://github.com/WG21-SG14/SG14/blob/master/SG14/inplace_function.h>)
 
 
 ## Desired C++17 Features
@@ -135,6 +137,7 @@ Event Pools:
 Agents:
 - Adapt the framework interface to a specific actor
 - Converts event type and date (WHAT) into actor-specific action (HOW)
+    - In otherwords, agents consume events and generate actions (events and actions are queued separately)
 
 Actors:
 - Register agent with framework
@@ -149,11 +152,12 @@ Framework:
 - immediately executing events
 - subscribing to events
 - deferring events
+- Dynamic memory (memory pool) actions are simply additional events inserted into event queue by framework
 
 Events:
 - Objects derived from Event base class
 - Base class has members for event pool reference
-- Should be trivially destructible
+- Should be trivially destructible (POD ideal)
 
 See also: http://makulik.github.io/sttcl/
 
