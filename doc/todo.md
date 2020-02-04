@@ -11,6 +11,8 @@ Estoppel TODO list and idea board
 - Replace SFINAE templates with constexpr if
 - Create global vars as inline constexpr values
 - Improve assert handler
+    - Use constexpr construct for assert (example (<https://github.com/32bitmicro/newlib-nano-1.0/blob/master/newlib/libc/include/assert.h>))
+    
 - Look for improvements for pack-expansion handling (no recursive templates)
 - Use template constructor argument deduction for templated classes
 - Use nested namespace declarations
@@ -27,23 +29,34 @@ Estoppel TODO list and idea board
 
 ## Misc improvements
 - Use gsl::not_null<T> to eliminate null-pointer checks
-- Use gsl::owner<T> to convey pointer ownership
+    - Create special type for not_null<T*>
+    - Create confirm_valid(T*) function to generate not_null values with assertion
+    - Create assume_valid(T*) function to generate not_null without checking
 - Use gsl::finally for close-of-scope actions
 - Expects() and Ensures() from GSL for pre- and post-conditions
 - gsl::zstring for null terminated strings (or gsl::czstring)
+- Use gsl::owner<T> to convey pointer ownership
 - Create special type a la owner<T> or unique_ptr<T> to denote global objects
+    - Create release(T*) function to denote giving up of ownership
+    - Create share(T&), loan(T&) to create Retained and Temp values
+    - Create Retained<T&>, Temp<T&> to denote retained and temporary values, respectively
+    - Create Unique<T*> to denote exclusive ownership
 - Return tuple or struct instead of in-out parametrs
 - Prefer in-class initializers
 - Default arguments instead of overloaded methods
 - Use std::optional instead of status value+inout parameter (or Expected<T>)
-- Use gsl::narrow_cast<> or gsl::narrow for narrowing operations
 - Switch to preferring free functions over methods
 - Use c++17 constexpr features
 - switch to stream-like handling for I/O, logging, tracing (easily overridden)
 - Consider user-defined literals for units
 - Change framework configuration scheme
 - Change "app" concept
-- Use structs for strong types
+- Use structs or enum classes for strong types
+- Adopt fmt (<https://fmt.dev/latest/index.html>) (aka std::format) library
+- Consider a tagged boolean type (example (<https://github.com/akrzemi1/explicit/blob/master/doc/tagged_bool.md>)
+- Consider an explicit output parameter type (example (<https://github.com/akrzemi1/explicit/blob/master/include/ak_toolkit/out_param.hpp>)
+
+
 
 ## BVBE Missing Features
 - Event framework
@@ -77,30 +90,6 @@ Estoppel TODO list and idea board
 - Initialization control via HSM
 
 ## Code Ideas
-### Display Driver:
-- Framebuffer class to manage hardware device
-- Frame class to implement memory abstraction/rotation via iterators or array notation
-- Pixel/PackedPixel class to represent memory within a frame
-- Canvas class to implement drawing functions
-
-```c++
-template<PixelFormat>
-Frame {
-	BitFieldArray pixels()
-	Size
-	Origin
-	MemoryOrder
-
-	Pixel {
-	}
-
-	Canvas : public CanvasInterface {
-	}
-}
-Canvas { virtual base class }
-
-```
-
 ### Events
 Event Queue:
 - provides simple insertion/removal at front or back
@@ -134,6 +123,8 @@ Events:
 - Objects derived from Event base class
 - Base class has members for event pool reference
 - Should be trivially destructible
+
+See also: http://makulik.github.io/sttcl/
 
 ### Type ID system
 ```c++
@@ -225,24 +216,9 @@ Alternative to exceptions for error handling
 Feature of gcc and clang
 Used for CHECK() macro
 
-### Cevelop IDE
-<https://www.cevelop.com/>
-
 ### Open source libraries
 [Facebook Folly](https://github.com/facebook/folly/blob/master/folly/docs/Overview.md)
 - Packed pointers
 
 [Google Abseil](https://abseil.io/about/intro)
-
-
-## References
-[CppCon 2017 Presentations](https://github.com/CppCon/CppCon2017/tree/master/Presentations)
-- Undefined behavior
-- Free functions
-- SFINAE
-- Non-blocking returns
-- Coroutines
-- folly::Function alternative to std::Function
-- Concepts-like TMP library for constraints
-
 
