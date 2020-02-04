@@ -58,6 +58,7 @@ Estoppel TODO list and idea board
 - Adopt fmt (<https://fmt.dev/latest/index.html>) (aka std::format) library
 - Consider a tagged boolean type (example (<https://github.com/akrzemi1/explicit/blob/master/doc/tagged_bool.md>)
 - Consider an explicit output parameter type (example (<https://github.com/akrzemi1/explicit/blob/master/include/ak_toolkit/out_param.hpp>)
+- Use pycrc to generate CRC16,32 functions (<https://pycrc.org/index.html>)
 
 
 
