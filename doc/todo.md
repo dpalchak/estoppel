@@ -28,6 +28,7 @@ Estoppel TODO list and idea board
 - std::void_t<...> for expression SFINAE
 - Add class template argument deduction helpers
 - Switch to std::span (<https://github.com/tcbrindle/span>)
+- Add status_value/Possible type (<https://github.com/martinmoene/status-value-lite>)
 
 
 ## Misc improvements
