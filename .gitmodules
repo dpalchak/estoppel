@@ -3,13 +3,13 @@
 	url = https://github.com/martinmoene/expected-lite.git
 [submodule "third_party/gcc-arm-none-eabi"]
 	path = third_party/gcc-arm-none-eabi
-	url = https://gitlab.com/dpalchak/gcc-arm-none-eabi
+	url = sso://user/palchak/third_party/gcc-arm-none-eabi
 [submodule "third_party/nordic"]
 	path = third_party/nordic
-	url = https://gitlab.com/dpalchak/nordic
+	url = sso://user/palchak/third_party/nordic
 [submodule "third_party/segger"]
 	path = third_party/segger
-	url = https://gitlab.com/dpalchak/segger.git
+	url = sso://user/palchak/third_party/segger
 [submodule "third_party/catch2"]
 	path = third_party/catch2
 	url = https://github.com/catchorg/Catch2
