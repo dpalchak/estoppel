@@ -51,7 +51,6 @@ list(APPEND CMAKE_MODULE_PATH "${ESTP_ROOT}/cmake")
 include(estp_build_flags)
 include(estp_internal)
 include(estp_core)
-include(estp_jlink)
 
 # Add customization libraries at the top-level so they can be modified by any
 # subdirectory, including user-provided ones
