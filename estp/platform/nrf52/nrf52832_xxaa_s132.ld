@@ -5,8 +5,8 @@ GROUP(-lgcc -lc -lnosys)
 
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x00030000, LENGTH = 0x50000
-  RAM (rwx) :  ORIGIN = 0x20002000, LENGTH = 0x0E000
+  FLASH (rx) : ORIGIN = 0x26000, LENGTH = 0x5a000
+  RAM (rwx) :  ORIGIN = 0x200022f0, LENGTH = 0xdd10
 }
 
 INCLUDE "nrf5_sdk_libs.ld"
