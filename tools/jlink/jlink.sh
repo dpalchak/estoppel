@@ -64,7 +64,7 @@ cmd_gdbserver(){
 }
 
 cmd_killserver(){
-    killall $(basename $JLINK_GDBSERVER)
+    killall JLinkGDBServer
 }
 
 cmd_rttclient(){
