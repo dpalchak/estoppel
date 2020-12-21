@@ -78,6 +78,7 @@ Estoppel TODO list and idea board
 - Consider Memory library (<https://github.com/foonathan/memory>)
 - Consider Compile-time type information (name, id): (<https://github.com/Manu343726/ctti>)
 
+- Use PROVIDE() to generate weak aliases for interrupt vector defaults
 
 ## BVBE Missing Features
 - Event framework
@@ -283,3 +284,14 @@ Used for CHECK() macro
 - Packed pointers
 
 [Google Abseil](https://abseil.io/about/intro)
+(??)
+(??)
+(??)## References
+(??)[CppCon 2017 Presentations](https://github.com/CppCon/CppCon2017/tree/master/Presentations)
+(??)- Undefined behavior
+(??)- Free functions
+(??)- SFINAE
+(??)- Non-blocking returns
+(??)- Coroutines
+(??)- folly::Function alternative to std::Function
+(??)- Concepts-like TMP library for constraints
