@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
-set(ESTP_PLATFORM nrf52_pca10040)
+set(ESTP_PLATFORM nrf52dk_nosd)
 set(ESTP_OPT speed)
 
 include("estoppel/cmake/estp_app.cmake")
@@ -82,5 +82,6 @@ target_link_libraries(led_softblink PRIVATE
     nrf5_sdk_warnings_hack
     "-Tnrf52832_xxaa_nosd.ld"   # use SDK provided linker script
 )
+
 
 add_estp_jlink_targets(led_softblink)
