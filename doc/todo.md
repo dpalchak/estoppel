@@ -1,6 +1,13 @@
 Estoppel TODO list and idea board
 
 ## Punchlist
+- Refactor and simplify platform selection/configuration
+    - Strip out platform library in favor of 'estp_platform' library injection
+    - estp_platform library is an alias for a real library
+    - Use 'estp_build' library that depends on 'estp_platform' (if available)
+    - Collect all compiler/linker under 'estp_flags'
+    - Use *.cmake include files to set up a platform
+
 - Create blinky app for STM32L4
 - Migrate data structures
 - Write test cases for data structures
@@ -15,7 +22,7 @@ Estoppel TODO list and idea board
 - Create global vars as inline constexpr values
 - Improve assert handler
     - Use constexpr construct for assert (example (<https://github.com/32bitmicro/newlib-nano-1.0/blob/master/newlib/libc/include/assert.h>))
-    
+    - See also https://github.com/foonathan/debug_assert
 - Look for improvements for pack-expansion handling (no recursive templates)
 - Use template constructor argument deduction for templated classes
 - Use nested namespace declarations
@@ -24,6 +31,7 @@ Estoppel TODO list and idea board
 - Use structured bindings for multiple return items
 - Consider use of std::optional/std::any/std::variant (use std::get_if for conditional retrival)
 - Evaluate std::to_chars instead of format library
+    - Or use fmt library (becoming std::format)
 - std::error_code (<https://en.cppreference.com/w/cpp/error/error_code)>
 - std::void_t<...> for expression SFINAE
 - Add class template argument deduction helpers
@@ -54,13 +62,21 @@ Estoppel TODO list and idea board
 - switch to stream-like handling for I/O, logging, tracing (easily overridden)
 - Consider user-defined literals for units
 - Change framework configuration scheme
-- Change "app" concept
 - Use structs or enum classes for strong types
 - Adopt fmt (<https://fmt.dev/latest/index.html>) (aka std::format) library
 - Consider a tagged boolean type (example (<https://github.com/akrzemi1/explicit/blob/master/doc/tagged_bool.md>)
 - Consider an explicit output parameter type (example (<https://github.com/akrzemi1/explicit/blob/master/include/ak_toolkit/out_param.hpp>)
 - Use pycrc to generate CRC16,32 functions (<https://pycrc.org/index.html>)
-
+- Add LittleFS based filesystem
+- TypeSafe library (<https://github.com/foonathan/type_safe>)
+- Better assert handling based on ideas in this library: (<https://github.com/foonathan/debug_assert>)
+    - Use lambda to defer evaluation of expression
+    - Use assert level handling strategy for logging
+    - Use Nifty Counter approach to introduce a compilation-unit specific name
+- Logging/Tracing use similar indirection / mediator pattern as in Memory library (<https://github.com/foonathan/memory>)
+    - Use TraceSinkTraits<SinkClass> to adapt arbitrary class as a sink for tracing
+- Consider Memory library (<https://github.com/foonathan/memory>)
+- Consider Compile-time type information (name, id): (<https://github.com/Manu343726/ctti>)
 
 
 ## BVBE Missing Features
@@ -81,7 +97,7 @@ Estoppel TODO list and idea board
 - Asynchronous I/O
 - USB driver
 - Sleep controller
-- NRF51 UART driver
+- NRF52 UART driver
 - Protobuf support
 - NVIC CMSIS replacement
 - FPU CMSIS replacement
@@ -95,35 +111,23 @@ Estoppel TODO list and idea board
 - Initialization control via HSM
 
 ## Code Ideas
+### Miscellaneous
+Use a nifty counter for global object initialization
+
 ### Configuration
-Use template global variables to define an option and its default value
-Use explicit instantiation to set the value for a given platform or application
+Select hardware-specific code using preprocessor token
+    - Define token using build system
+    - Include common file that then includes specific file based on preprocessor token
+    - Use namespace aliases
+    - Swap in *.cc files using build system
 
-Example:
-driver.hh
-```c++
-namespace config {
+Define PLATFORM_CONFIG_HH preprocessor token containing filename of configuration file for platform
+Define SYSTEM_CONFIG_HH for system
 
-template<typename APP>
-constexpr int32_t kDriverBufferSize = 2048;
+Platform = Hardware-specific
+System = Low-level (operating) system specific
+Platform depends on System
 
-}
-
-static byte buffer[::config::kDriverBufferSize<Application>];
-```
-
-application.hh
-```c++
-struct FizzBuzz {};
-
-namespace config {
-using Application = ::FizzBuzz;
-
-template<>
-constexpr int32_t kDriverBufferSize<::FizzBuzz> = 512;
-
-}
-```
 
 ### Events
 Event Queue:
@@ -182,6 +186,27 @@ public:
 
 template<typename T>
 type_id_t type_id() { return &type_id<T>; }
+```
+
+### Replacement for standard library
+```c++
+
+extern "C" void __cxa_pure_virtual(void) __attribute__ ((__noreturn__));
+extern "C" void __cxa_deleted_virtual(void) __attribute__ ((__noreturn__));
+
+void __cxa_pure_virtual(void) {
+  // We might want to write some diagnostics to uart in this case
+  //std::terminate();
+  while (1)
+    ;
+}
+
+void __cxa_deleted_virtual(void) {
+  // We might want to write some diagnostics to uart in this case
+  //std::terminate();
+  while (1)
+    ;
+}
 ```
 
 ## Resources
@@ -258,4 +283,3 @@ Used for CHECK() macro
 - Packed pointers
 
 [Google Abseil](https://abseil.io/about/intro)
-
