@@ -1,5 +1,5 @@
 
-
+include("${ESTP_ROOT}/cmake/estp_jlink.cmake")
 
 function(get_nrf5_sdk_root VAR_NAME)
     set("${VAR_NAME}" "${ESTP_ROOT}/third_party/nordic/nrf5_sdk/latest" PARENT_SCOPE)
@@ -154,6 +154,10 @@ target_link_options(nrf52_common_platform_build INTERFACE
     "-mabi=aapcs"
 )
 
+target_sources(nrf52_common_platform_sources PRIVATE
+    ${NRF5_SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52.S
+    ${NRF5_SDK_ROOT}/modules/nrfx/mdk/system_nrf52.c
+)
 
 add_estp_platform_libraries(nrf52_nosd EXTENDS nrf52_common)
 
@@ -233,3 +237,6 @@ target_compile_definitions(nrf52dk_s132_platform_build INTERFACE
 target_link_libraries(nrf52dk_s132_platform_sources PRIVATE
     nrf5_sdk_warnings_hack
 )
+
+set_estp_platform_jlink_config(nrf52dk_nosd NRF52832_XXAA SWD 4000)
+set_estp_platform_jlink_config(nrf52dk_s132 NRF52832_XXAA SWD 4000)
