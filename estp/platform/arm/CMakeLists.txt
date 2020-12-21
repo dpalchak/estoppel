@@ -53,6 +53,10 @@ foreach(ARCH armcm4f armcm4 armcm3 armcm0p)
         ${${uARCH}_ARCH_FLAGS}
     )
 
+    target_link_options(${ARCH}_platform_build INTERFACE
+        "-L${CMAKE_CURRENT_LIST_DIR}"
+    )
+
     target_link_options(${ARCH}_platform_link INTERFACE
         -nostartfiles
     )
@@ -61,20 +65,20 @@ endforeach()
 
 target_sources(armcm4f_platform_sources PRIVATE
     reset_handler.cc
-    armv7-m_vector_table.cc
+    armv7m_vector_table.cc
 )
 
 target_sources(armcm4_platform_sources PRIVATE
     reset_handler.cc
-    armv7-m_vector_table.cc
+    armv7m_vector_table.cc
 )
 
 target_sources(armcm3_platform_sources PRIVATE
     reset_handler.cc
-    armv7-m_vector_table.cc
+    armv7m_vector_table.cc
 )
 
-target_sources(armcm0p_platform_sources PRIVATE
-    reset_handler.cc
-    #armv6-m_vector_table.cc
-)
+#target_sources(armcm0p_platform_sources PRIVATE
+#    reset_handler.cc
+#    armv6m_vector_table.cc
+#)

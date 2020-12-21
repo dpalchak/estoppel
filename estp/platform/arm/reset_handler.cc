@@ -1,11 +1,13 @@
 
 #include <cstdint>
 
+#include "estp/base/macros.hh"
+
 namespace estp {
 
-using InitFunction = void (*)(void);
-
 extern "C" {
+
+using InitFunction = void (*)(void);
 
 extern uint32_t const __data_load_start;
 extern uint32_t __data_start;
@@ -19,18 +21,24 @@ extern InitFunction __init_array_start, __init_array_end;
 
 int main(void);
 
+// Provide a weak implementation of the CMSIS SystemInit function
+// in case the user does not provide one.
+// Separate the definition from the declaration so that the symbol can be WEAK
+WEAK void SystemInit(void);
+void SystemInit() {}
+
 void Reset_Handler() {
 	// Copy DATA section
 	{
 		uint32_t const *src = &__data_load_start;
 		uint32_t *dest = &__data_start;
-		while (dest < &__data_end) {
+		while (dest != &__data_end) {
 			*dest++ = *src++;
 		}
 	}
 
 	// Zero-fill BSS
-	for (uint32_t *dest = &__bss_start; dest < &__bss_end;) {
+	for (uint32_t *dest = &__bss_start; dest != &__bss_end;) {
 		*dest++ = 0;
 	}
 
@@ -44,6 +52,9 @@ void Reset_Handler() {
 	for (InitFunction *f = &__init_array_start; f != &__init_array_end; ++f) {
 		(*f)();
 	}
+
+    // For CMSIS compliance
+    SystemInit();
 
 	// Let 'er rip
 	(void) main();

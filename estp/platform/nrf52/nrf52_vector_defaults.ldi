@@ -1,0 +1,41 @@
+
+/* Ensure that the vector table symbol exists */
+EXTERN(kNrf52VectorTable)
+
+PROVIDE(POWER_CLOCK_IRQHandler = Default_Handler);
+PROVIDE(RADIO_IRQHandler = Default_Handler);
+PROVIDE(UARTE0_UART0_IRQHandler = Default_Handler);
+PROVIDE(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler = Default_Handler);
+PROVIDE(SPIM1_SPIS1_TWIM1_TWIS1_SPI1_TWI1_IRQHandler = Default_Handler);
+PROVIDE(NFCT_IRQHandler = Default_Handler);
+PROVIDE(GPIOTE_IRQHandler = Default_Handler);
+PROVIDE(SAADC_IRQHandler = Default_Handler);
+PROVIDE(TIMER0_IRQHandler = Default_Handler);
+PROVIDE(TIMER1_IRQHandler = Default_Handler);
+PROVIDE(TIMER2_IRQHandler = Default_Handler);
+PROVIDE(RTC0_IRQHandler = Default_Handler);
+PROVIDE(TEMP_IRQHandler = Default_Handler);
+PROVIDE(RNG_IRQHandler = Default_Handler);
+PROVIDE(ECB_IRQHandler = Default_Handler);
+PROVIDE(CCM_AAR_IRQHandler = Default_Handler);
+PROVIDE(WDT_IRQHandler = Default_Handler);
+PROVIDE(RTC1_IRQHandler = Default_Handler);
+PROVIDE(QDEC_IRQHandler = Default_Handler);
+PROVIDE(COMP_LPCOMP_IRQHandler = Default_Handler);
+PROVIDE(SWI0_EGU0_IRQHandler = Default_Handler);
+PROVIDE(SWI1_EGU1_IRQHandler = Default_Handler);
+PROVIDE(SWI2_EGU2_IRQHandler = Default_Handler);
+PROVIDE(SWI3_EGU3_IRQHandler = Default_Handler);
+PROVIDE(SWI4_EGU4_IRQHandler = Default_Handler);
+PROVIDE(SWI5_EGU5_IRQHandler = Default_Handler);
+PROVIDE(TIMER3_IRQHandler = Default_Handler);
+PROVIDE(TIMER4_IRQHandler = Default_Handler);
+PROVIDE(PWM0_IRQHandler = Default_Handler);
+PROVIDE(PDM_IRQHandler = Default_Handler);
+PROVIDE(MWU_IRQHandler = Default_Handler);
+PROVIDE(PWM1_IRQHandler = Default_Handler);
+PROVIDE(PWM2_IRQHandler = Default_Handler);
+PROVIDE(SPIM2_SPIS2_SPI2_IRQHandler = Default_Handler);
+PROVIDE(RTC2_IRQHandler = Default_Handler);
+PROVIDE(I2S_IRQHandler = Default_Handler);
+PROVIDE(FPU_IRQHandler = Default_Handler);

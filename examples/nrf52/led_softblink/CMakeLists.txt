@@ -80,7 +80,6 @@ target_link_options(led_softblink PRIVATE
 
 target_link_libraries(led_softblink PRIVATE
     nrf5_sdk_warnings_hack
-    "-Tnrf52832_xxaa_nosd.ld"   # use SDK provided linker script
 )
 
 

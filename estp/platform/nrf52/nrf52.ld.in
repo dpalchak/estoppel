@@ -1,16 +1,15 @@
 /*
- * Linker script for STM32L4xx series devices. This script is intended to be
+ * Linker script for NRF52 series devices. This script is intended to be
  * pre-processed using the C preprocessor before being used.
  *
- * The following symbols are assumed to exist in the code:
- *   Reset_Handler : Entry point for execution
+ * The following tokens must be defined:
+ * MEMORY_LDI_FILE
+ *
  *
  * The following preprocessor symbols may be be defined to a true or false value
  * to control the inclusion or exclusion of sections
  * KEEP_UNWIND_TABLES
  * KEEP_EXCEPTIONS
- * STARTUP_COPY_MULTIPLE
- * STARTUP_CLEAR_BSS_MULTIPLE
  *
  * The following symbols may be defined to a numeric value
  * HEAP_SIZE
@@ -18,30 +17,32 @@
  *
  */
 
-ENTRY(Reset_Handler)
+OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 
-/* Ensure that the vector tables get pulled in */
-EXTERN(kArmExceptionVectorTable)
-EXTERN(kStm32l4xxInterruptVectorTable)
+SEARCH_DIR(.)
+GROUP(-lgcc -lc -lnosys)
 
-INCLUDE "stm32l4x6xg_memory.ldi"
+INCLUDE "armv7m_vector_defaults.ldi"
+INCLUDE "nrf52_vector_defaults.ldi"
 
-SECTIONS
-{
-    .vectors : {
+/* The token MEMORY_LDI_FILE gets replaced in the preprocessing step */
+INCLUDE MEMORY_LDI_FILE
+
+SECTIONS {
+    .vector_tables : {
         /* Exception and interrupt vectors */
-        KEEP(*(.armcm4f_vector_table*))
-        KEEP(*(.stm32l4xx_vector_table*))
+        KEEP(*(.vector_table.armv7m*))
+        KEEP(*(.vector_table.nrf52*))
     } >FLASH
 
-    .build_info ALIGN(4) : {
+    .build_info : ALIGN(4) {
         __build_info_start = .;
         KEEP(*(.build_info))
         __build_info_end = .;
     } >FLASH
 
     /* Normal code */
-    .text : {
+    .text : ALIGN(4) {
         *(.text*)
     } >FLASH
 
@@ -66,21 +67,23 @@ SECTIONS
         *(.rodata*)
     } >FLASH
 
+    INCLUDE "nrf5_sdk_rodata_sections.ldi"
+
 #if KEEP_EXCEPTIONS
     /* Exception handling frame */
-    .eh_frame : {
+    .eh_frame : ALIGN(4) {
         KEEP(*(.eh_frame*))
-    } > FLASH
+    } >FLASH
 
     /* ARM exception tables */
-    .ARM.extab : {
+    .ARM.extab : ALIGN(4) {
         *(.ARM.extab* .gnu.linkonce.armextab.*)
     } >FLASH
 #endif
 
 #if KEEP_UNWIND_TABLES
     /* ARM stack unwinding tables */
-    .ARM.exidx : {
+    .ARM.exidx : ALIGN(4) {
         __exidx_start = .;
         *(.ARM.exidx* .gnu.linkonce.armexidx.*)
         __exidx_end = .;
@@ -92,23 +95,26 @@ SECTIONS
         *(.data*)
         . = ALIGN(4);
         __data_end = .;
-    } >SRAM1 AT>FLASH
+    } >RAM AT>FLASH
 
     __data_load_start = LOADADDR(.data);
 
-    .bss ALIGN(16) (NOLOAD) : {
+    INCLUDE "nrf5_sdk_data_sections.ldi"
+
+    .bss (NOLOAD) : ALIGN(16) {
         __bss_start = .;
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
         __bss_end = .;
-    } >SRAM1
+    } >RAM
 
-    .persistent_data ALIGN(4) (NOLOAD) : {
+    .persistent_data (NOLOAD) : ALIGN(4) {
         __persistent_start = .;
         *(.persistent*)
         __persistent_end = .;
-    } >SRAM1
+    } >RAM
+
 
 #ifdef HEAP_SIZE
     .heap ALIGN(4) (NOLOAD) : {
@@ -116,20 +122,19 @@ SECTIONS
         . = . + HEAP_SIZE;
         . = ALIGN(4);
         __heap_end = .;
-    } >SRAM1
-
+    } >RAM
     /* Newlib uses the distinctly named 'end' symbol for the start-of-heap marker */
     PROVIDE_HIDDEN(end = __heap_start);
 #endif
 
     /* Stack gets all the remaining RAM */
     /* There is are stack_dummy sections anywhere */
-    .stack ALIGN(4) (NOLOAD) : {
+    .stack (NOLOAD) : ALIGN(4) {
         __stack_bottom = .;
         *(.stack_dummy*)
-        __stack_top = ORIGIN(SRAM1) + LENGTH(SRAM1);
+        __stack_top = ORIGIN(RAM) + LENGTH(RAM);
         __stack_size = __stack_top - __stack_bottom;
-    } >SRAM1
+    } >RAM
 
 #ifdef MIN_STACK_SIZE
     /* Check that stack meets or exceeds minimum size */
@@ -138,13 +143,6 @@ SECTIONS
 
     /* Discard unused sections explicitly */
     /DISCARD/ : {
-        /* GCC no longer uses .init and .fini sections */
-        *(.init)
-        *(.fini)
-
-        /* We never return from main, so discard global destructors */
-        *(.fini_array*)
-
 #if !KEEP_EXCEPTIONS
         *(.eh_frame*)
         *(.ARM.extab* .gnu.linkonce.armextab.*)
@@ -153,11 +151,21 @@ SECTIONS
 #if !KEEP_UNWIND_TABLES
         *(.ARM.exidx* .gnu.linkonce.armexidx.*)
 #endif
+    }
 
+    /* This could be discarded, but we keep them in the output file, just in case they do exist.
+    * This let's us see what what is getting put in them (if anything)
+    */
+    .UNUSED (INFO) : ALIGN(4) {
+        /* GCC no longer uses .init and .fini sections */
+        *(.init)
+        *(.fini)
+        /* We never return from main, so discard global destructors */
+        *(.fini_array*)
     }
 
     /* Keep build attributes in ELF file for analysis */
-    .ARM.attributes 0 : {
+    .ARM.attributes (INFO) : ALIGN(4) {
         *(.ARM.attributes*)
     }
 }

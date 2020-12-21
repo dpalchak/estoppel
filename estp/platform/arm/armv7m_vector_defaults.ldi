@@ -1,0 +1,27 @@
+/*
+ * Linker include file for ARMv7-M series devices. This script is intended to be
+ * included in a final linker script to provide defaults for the ARMv7-M vector table entries
+ *
+*/
+
+ENTRY(Reset_Handler)
+
+/* Ensure that these symbols exist */
+EXTERN(kArmv7mVectorTable)
+EXTERN(Default_Handler)
+EXTERN(SystemInit)
+
+/* These PROVIDE() statements create a weak symbol
+ * They will be used iff the user's code does not provide the same symbol.
+ * The names of the handler routines match the CMSIS standard
+*/
+
+PROVIDE(NMI_Handler = Default_Handler);
+PROVIDE(HardFault_Handler = Default_Handler);
+PROVIDE(MemManage_Handler = Default_Handler);
+PROVIDE(BusFault_Handler = Default_Handler);
+PROVIDE(UsageFault_Handler = Default_Handler);
+PROVIDE(SVC_Handler = Default_Handler);
+PROVIDE(DebugMon_Handler = Default_Handler);
+PROVIDE(PendSV_Handler = Default_Handler);
+PROVIDE(SysTick_Handler = Default_Handler);

@@ -22,10 +22,10 @@ target_compile_options(nrf5_sdk_warnings_hack INTERFACE
     $<$<COMPILE_LANGUAGE:C>:-Wno-discarded-qualifiers>
 )
 
-add_estp_platform_libraries(nrf52_common)
+add_estp_platform_libraries(nrf52_common EXTENDS armcm4f)
 
 target_link_libraries(nrf52_common_platform_link INTERFACE
-    "-L${CMAKE_CURRENT_LIST_DIR}"
+    "-L${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 target_include_directories(nrf52_common_platform_build INTERFACE
@@ -155,7 +155,8 @@ target_link_options(nrf52_common_platform_build INTERFACE
 )
 
 target_sources(nrf52_common_platform_sources PRIVATE
-    ${NRF5_SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52.S
+    #${NRF5_SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52.S
+    nrf52_vector_table.cc
     ${NRF5_SDK_ROOT}/modules/nrfx/mdk/system_nrf52.c
 )
 
@@ -226,6 +227,35 @@ target_link_libraries(nrf52dk_nosd_platform_sources PRIVATE
     nrf5_sdk_warnings_hack
 )
 
+# TODO(palchak): wrap this in a function that provides a means to
+# configure link script options
+
+# Use the C preprocessor to generate a linker script
+add_custom_command(
+    OUTPUT "nrf52832_xxaa_nosd.ld"
+    COMMAND
+        ${CMAKE_CPP} -P -CC
+        "${CMAKE_CURRENT_SOURCE_DIR}/nrf52.ld.in"
+        -o "nrf52832_xxaa_nosd.ld"
+        "-DMEMORY_LDI_FILE=\"nrf52832_xxaa_nosd_memory.ldi\""
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/nrf52.ld.in"
+    COMMENT "Generating NRF52_XXAA_NOSD linker script"
+    VERBATIM
+)
+
+# Create a custom target that generates a linker script
+add_custom_target(gen_nrf52_xxaa_nosd_link_script DEPENDS "nrf52832_xxaa_nosd.ld")
+
+add_dependencies(nrf52dk_nosd_platform_link gen_nrf52_xxaa_nosd_link_script)
+
+target_link_libraries(nrf52dk_nosd_platform_link INTERFACE
+    "-T${CMAKE_CURRENT_BINARY_DIR}/nrf52832_xxaa_nosd.ld"
+)
+
+set_estp_platform_jlink_config(nrf52dk_nosd NRF52832_XXAA SWD 4000)
+
+
 
 add_estp_platform_libraries(nrf52dk_s132 EXTENDS nrf52_s132)
 
@@ -238,5 +268,27 @@ target_link_libraries(nrf52dk_s132_platform_sources PRIVATE
     nrf5_sdk_warnings_hack
 )
 
-set_estp_platform_jlink_config(nrf52dk_nosd NRF52832_XXAA SWD 4000)
+# Use the C preprocessor to generate a linker script
+add_custom_command(
+    OUTPUT "nrf52832_xxaa_s132.ld"
+    COMMAND
+        ${CMAKE_CPP} -P -CC
+        "${CMAKE_CURRENT_SOURCE_DIR}/nrf52.ld.in"
+        -o "nrf52832_xxaa_s132.ld"
+        "-DMEMORY_LDI_FILE=\"nrf52832_xxaa_s132_memory.ldi\""
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/nrf52.ld.in"
+    COMMENT "Generating NRF52_XXAA_NOSD linker script"
+    VERBATIM
+)
+
+# Create a custom target that generates a linker script
+add_custom_target(gen_nrf52_xxaa_s132_link_script DEPENDS "nrf52832_xxaa_s132.ld")
+
+add_dependencies(nrf52dk_s132_platform_link gen_nrf52_xxaa_s132_link_script)
+
+target_link_libraries(nrf52dk_s132_platform_link INTERFACE
+    "-T${CMAKE_CURRENT_BINARY_DIR}/nrf52832_xxaa_s132.ld"
+)
+
 set_estp_platform_jlink_config(nrf52dk_s132 NRF52832_XXAA SWD 4000)
