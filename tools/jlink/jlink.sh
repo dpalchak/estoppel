@@ -34,7 +34,7 @@ show_help(){
     echo "    info              Show J-Link tool help"
     echo "    reset             Reset the target. Target will automatically resume."
     echo "    erase             Erase the flash memory"
-    echo "    load <HEXFILE>    Load a file into flash. Target will automatically reset and resume."
+    echo "    flash <HEXFILE>    Load a file into flash. Target will automatically reset and resume."
     echo "    gdbserver         Start a GDB server in the background"
     echo "    killserver        Kill all background GDB servers"
     echo "    rttclient         Start an RTT client"
@@ -52,11 +52,16 @@ cmd_erase(){
     printf "$JLINK_HALT_CMD $JLINK_ERASE_CMD $JLINK_QUIT_CMD" | $JLINK_COMMANDER
 }
 
-cmd_load(){
+cmd_flash(){
     HEX_FILE=$1
     JLINK_LOAD_CMD="loadfile ${HEX_FILE} \n"
     printf "$JLINK_HALT_CMD $JLINK_LOAD_CMD $JLINK_RESET_CMD $JLINK_QUIT_CMD" | \
         $JLINK_COMMANDER
+}
+
+# Synonym for `flash`
+cmd_load() {
+    cmd_flash $@
 }
 
 cmd_gdbserver(){

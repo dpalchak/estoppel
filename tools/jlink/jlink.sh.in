@@ -39,7 +39,7 @@ cmd_help(){
     echo "    help        Show this message"
     echo "    reset       Reset the target. Target will automatically resume."
     echo "    erase       Erase flash"
-    echo "    load        Load a file into memory. Target will automatically reset and resume."
+    echo "    flash        Load a file into memory. Target will automatically reset and resume."
     echo ""
 }
 
@@ -54,9 +54,14 @@ cmd_erase(){
     printf "$jlink_halt_cmd $jlink_erase_cmd $jlink_quit_cmd" | $jlink_commander_cmdline
 }
 
-cmd_load(){
+cmd_flash(){
     printf "$jlink_halt_cmd $jlink_load_cmd $jlink_reset_cmd $jlink_quit_cmd" | \
         $jlink_commander_cmdline
+}
+
+# Synonym for `flash`
+cmd_load(){
+    cmd_flash $@
 }
 
 cmd_gdbserver(){
