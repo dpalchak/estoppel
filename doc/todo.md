@@ -78,8 +78,6 @@ Estoppel TODO list and idea board
 - Consider Memory library (<https://github.com/foonathan/memory>)
 - Consider Compile-time type information (name, id): (<https://github.com/Manu343726/ctti>)
 
-- Use PROVIDE() to generate weak aliases for interrupt vector defaults
-
 ## BVBE Missing Features
 - Event framework
 - Actor class
