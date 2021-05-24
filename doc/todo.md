@@ -77,6 +77,7 @@ Estoppel TODO list and idea board
     - Use TraceSinkTraits<SinkClass> to adapt arbitrary class as a sink for tracing
 - Consider Memory library (<https://github.com/foonathan/memory>)
 - Consider Compile-time type information (name, id): (<https://github.com/Manu343726/ctti>)
+- "BlockPool" for allocation of fixed-size blocks, "ObjectPool" for allocation of reference-counted fixed-size blocks
 
 ## BVBE Missing Features
 - Event framework
@@ -318,3 +319,7 @@ Used for CHECK() macro
 (??)- Coroutines
 (??)- folly::Function alternative to std::Function
 (??)- Concepts-like TMP library for constraints
+    
+[Fitterbap](https://github.com/jetperch/fitterbap)
+- Firmware toolkit to enable reliable best architecture practices! Fitterbap provides common utilities useful for embedded systems that are often not included in an RTOS or the standard C library.
+- https://github.com/jetperch/fitterbap/blob/main/include/fitterbap/comm/data_link.h
