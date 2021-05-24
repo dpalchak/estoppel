@@ -165,12 +165,37 @@ Events:
 - Should be trivially destructible (POD ideal)
 
 See also: http://makulik.github.io/sttcl/
+    
+See SObjectizer for inspirations:
+    Events/Messages are any aggregate that is POD (copyable and serializable)
+    Wrapped in an Event<PodType> object that is type-erasable
+    Pre-allocated Events are passed as Event<T> const& objects; Framework-allocated events are passed as T&& (via move)
+    Event<T> contains storage for type T and derives from BasicEvent
+    Type of aggregate is the "Event ID"
+    Actors are instances of classes that inherit from an "ActorBase" base class
+    Actors are HSMs
+    HSM definined via instance members, where members are of some State type
+    Substates constructors are passed instances of their parent state (indicates that a state is a substate)
+    Initial substates are declared expressively
+    "Post" and "Collect" verbs for sending messages and receiving messages asynchronously
+    Init, Start, Run, Stop, Finish lifecycle phases for Actors (via messages) (Init is equivalent to Sobjectizer "define_agent")
+    Event subscription inferred based on call signature of handler (e.g. void handler(Event<PodType> evt))
+    Actors implement the HSM
+    Actors have Agents
+    Agents implement the context machinery (setting up/managing queue, subscribing/retrieving/posting/collecting aka dispatching)
+    Topics are Actors that handle pub/sub functionality
+    Agents are also a Topic for a specific Actor
+    Timer-initiated automatic state transitions (e.g. state entry automatically posts delayed event) }-> useful helper machinery
+    Support Actor "Troups" for atomic creation/registration of multiple Actors
+    Helper object for declaring Request-Response message pairs 
+        (possibly with some special message filtering activated to ensure that the next message received by an Actor is the response)
+        
 
 ### Type ID system
 ```c++
 class type_id_t
 {
-    using sig = type_id_t();
+    using sig = type_id_t(*)();
 
     sig* id;
     type_id_t(sig* id) : id{id} {}
@@ -237,7 +262,7 @@ Then use a device-specific header to create aliases or instances of the specific
 
 Classes for each resource (Pin, Controller, etc)
 Platform files for each platform (aka PCB) that provides the following:
-- Aliases for hardware-specific classes as generically named resources; e.g. Platform:I2cMaster0 = stm32l4::I2cMaster<0>
+- Aliases for hardware-specific classes as generically named resources; e.g. Platform::I2cMaster0 = stm32l4::I2cMaster<0>
 - Template classes for drivers with Resources passed as template arguments
 Application config files that map resources exposed by platforms to resources required by application
 ```c++
