@@ -128,7 +128,16 @@ Platform = Hardware-specific
 System = Low-level (operating) system specific
 Platform depends on System
 
-
+### Build System
+- Make platform selection machinery optional (use CMake's option functionality)
+- Change toolchain selection to use find_package()
+- Borrow Zephyr's find_package() technique to add boilerplate to application CMakeLists.txt
+- Borrow Pigweed's approach to sub-library naming (e.g. estp_build.flags, etc)
+- Separate build system entry via add_subdirectory versus find_package() (like Zephyr)
+- Change third_party packages to use find_package()
+- Consider using export(TARGETS ....) to allow for multi-image or multi-toolchain builds (see add_child_image() in Nordic SDK)
+- 'build' directory should be CMake libraries (flags, warnings, compiler directives, etc) where as 'cmake' directory should contain the build system (in case projects don't have their own)
+    
 ### Events
 Event Queue:
 - provides simple insertion/removal at front or back
@@ -168,28 +177,27 @@ Events:
 See also: http://makulik.github.io/sttcl/
     
 See SObjectizer for inspirations:
-    Events/Messages are any aggregate that is POD (copyable and serializable)
-    Wrapped in an Event<PodType> object that is type-erasable
-    Pre-allocated Events are passed as Event<T> const& objects; Framework-allocated events are passed as T&& (via move)
-    Event<T> contains storage for type T and derives from BasicEvent
-    Type of aggregate is the "Event ID"
-    Actors are instances of classes that inherit from an "ActorBase" base class
-    Actors are HSMs
-    HSM definined via instance members, where members are of some State type
-    Substates constructors are passed instances of their parent state (indicates that a state is a substate)
-    Initial substates are declared expressively
-    "Post" and "Collect" verbs for sending messages and receiving messages asynchronously
-    Init, Start, Run, Stop, Finish lifecycle phases for Actors (via messages) (Init is equivalent to Sobjectizer "define_agent")
-    Event subscription inferred based on call signature of handler (e.g. void handler(Event<PodType> evt))
-    Actors implement the HSM
-    Actors have Agents
-    Agents implement the context machinery (setting up/managing queue, subscribing/retrieving/posting/collecting aka dispatching)
-    Topics are Actors that handle pub/sub functionality
-    Agents are also a Topic for a specific Actor
-    Timer-initiated automatic state transitions (e.g. state entry automatically posts delayed event) }-> useful helper machinery
-    Support Actor "Troups" for atomic creation/registration of multiple Actors
-    Helper object for declaring Request-Response message pairs 
-        (possibly with some special message filtering activated to ensure that the next message received by an Actor is the response)
+- Events/Messages are any aggregate that is POD (copyable and serializable)
+- Wrapped in an Event<PodType> object that is type-erasable
+- Pre-allocated Events are passed as Event<T> const& objects; Framework-allocated events are passed as T&& (via move)
+- Event<T> contains storage for type T and derives from BasicEvent
+- Type of aggregate is the "Event ID"
+- Actors are instances of classes that inherit from an "ActorBase" base class
+- Actors are HSMs
+- HSM definined via instance members, where members are of some State type
+- Substates constructors are passed instances of their parent state (indicates that a state is a substate)
+- Initial substates are declared expressively
+- "Post" and "Collect" verbs for sending messages and receiving messages asynchronously
+- Init, Start, Run, Stop, Finish lifecycle phases for Actors (via messages) (Init is equivalent to Sobjectizer "define_agent")
+- Event subscription inferred based on call signature of handler (e.g. void handler(Event<PodType> evt))
+- Actors implement the HSM
+- Actors have Agents
+- Agents implement the context machinery (setting up/managing queue, subscribing/retrieving/posting/collecting aka dispatching)
+- Topics are Actors that handle pub/sub functionality
+- Agents are also a Topic for a specific Actor
+- Timer-initiated automatic state transitions (e.g. state entry automatically posts delayed event) }-> useful helper machinery
+- Support Actor "Troups" for atomic creation/registration of multiple Actors
+- Helper object for declaring Request-Response message pairs (possibly with some special message filtering activated to ensure that the next message received by an Actor is the response)
         
 
 ### Type ID system
